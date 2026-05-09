@@ -25,20 +25,38 @@ _CACHE_DIR = _REPO_ROOT / "cache"
 # ElevenLabs model — use multilingual v2 for quality; turbo as fallback
 _MODEL_ID = "eleven_multilingual_v2"
 
-# Voice settings for a contemplative, grounded feel
+# Voice settings for a contemplative, grounded feel.
+# speed=0.92 per soul.md §7.7 — slower than default to match the show's
+# unhurried tone. Range supported by ElevenLabs is roughly 0.7–1.2.
 _VOICE_SETTINGS = {
     "stability": 0.60,
     "similarity_boost": 0.75,
     "style": 0.0,
     "use_speaker_boost": True,
+    "speed": 0.92,
 }
 
 _MAX_RETRIES = 3
 _RETRY_DELAY = 5  # seconds
 
 
+def _settings_fingerprint() -> str:
+    """Stable short fingerprint of voice settings for cache-key namespacing.
+
+    Including this in the cache key ensures a settings change (e.g. speed
+    going from 1.0 → 0.92) busts cached audio so we don't return audio
+    rendered at the wrong speed for the same text.
+    """
+    items = sorted(_VOICE_SETTINGS.items())
+    raw = ";".join(f"{k}={v}" for k, v in items)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
+
+
+_SETTINGS_FP = _settings_fingerprint()
+
+
 def _cache_key(voice_id: str, text: str) -> str:
-    raw = f"{voice_id}::{text}"
+    raw = f"{voice_id}::{_SETTINGS_FP}::{text}"
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
@@ -106,12 +124,7 @@ def render_turns(
                         voice_id=voice_id,
                         text=text,
                         model_id=_MODEL_ID,
-                        voice_settings={
-                            "stability": _VOICE_SETTINGS["stability"],
-                            "similarity_boost": _VOICE_SETTINGS["similarity_boost"],
-                            "style": _VOICE_SETTINGS["style"],
-                            "use_speaker_boost": _VOICE_SETTINGS["use_speaker_boost"],
-                        },
+                        voice_settings=dict(_VOICE_SETTINGS),
                         output_format="mp3_44100_128",
                     )
                 )

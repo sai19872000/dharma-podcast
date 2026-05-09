@@ -1,7 +1,7 @@
 # Episode 001 — Vairagya × affective forecasting
 
-**Duration:** 6:27  
-**Soul.md version:** `13c38593602e`
+**Duration:** 9:10  
+**Soul.md version:** `acc9d330c923`
 
 ---
 
@@ -13,20 +13,14 @@ The concept of *vairagya* — dispassion or non-attachment — from the Yoga Sū
 
 ## Primary source citations
 
-**1. Bhagavad Gita 2.47–2.48 (The Song Celestial)**  
+**1. Bhagavad Gita 2.47**  
 Translator: Edwin Arnold · License: PD · [Source](https://www.sacred-texts.com/hin/gita/bg02.htm)
 
-**2. Yoga Sūtras 1.15 (Raja Yoga)**  
-Translator: Swami Vivekananda · License: PD · [Source](https://www.sacred-texts.com/hin/yogasutr.htm)
-
-**3. Bhagavad Gita 2.56 (The Song Celestial)**  
+**2. Bhagavad Gita 2.56**  
 Translator: Edwin Arnold · License: PD · [Source](https://www.sacred-texts.com/hin/gita/bg02.htm)
 
-**4. Anguttara Nikāya 5.30 — With Nāgita**  
+**3. Anguttara Nikāya 5.30 — With Nāgita**  
 Translator: Bhante Sujato · License: CC0 · [Source](https://suttacentral.net/an5.30/en/sujato)
-
-**6. Yoga Sūtras 1.16 (Raja Yoga)**  
-Translator: Swami Vivekananda · License: PD · [Source](https://www.sacred-texts.com/hin/yogasutr.htm)
 
 ---
 

@@ -53,6 +53,23 @@ the Pāli and define it once. If an English word does the work
 better, use the English. Never pick a Sanskrit term to sound
 authentic.
 
+**Sanskrit/Pāli term density rule (binding for the engine).** Each
+Sanskrit or Pāli technical term is introduced **once** with a short
+English gloss inline — `vairāgya — non-attachment`,
+`niṣkāma karma — action without grasping at outcome`,
+`sthitaprajña — the one of steady insight` — and then the
+remainder of the episode uses the **English gloss only**, not the
+Sanskrit. The lineage stays intact: name the tradition (Yoga
+Sūtras, Bhagavad Gītā, AN 5.30), name the figures (Patañjali,
+Krishna, Buddha), quote the source verbatim. But the abstract
+concept itself runs in English after first introduction. Target:
+across an 18-turn episode, each Sanskrit/Pāli concept appears at
+most twice (introduction + at most one re-anchor), never four to
+six times. Proper names of works and figures (Gītā, Patañjali,
+Mahābhārata, Soṇa) and verbatim quotes are exempt from this count
+— only the abstract Sanskrit/Pāli **concept terms** are
+rate-limited.
+
 **Banned vocabulary — do not appear in any episode:**
 - "energy" used metaphysically (subtle energy, healing energy,
   divine energy)
@@ -1055,13 +1072,36 @@ Every episode hews to this shape. Times are guideline ranges,
 not hard quotas. The total target is five to eight minutes;
 shorter is better than longer when the material allows.
 
+### 7.0 COLD OPEN — approximately 15 to 20 seconds
+
+Before the dialogue starts, Voice A speaks a short cold-open
+solo: a single sentence naming the show, then one or two
+sentences naming the specific concept-pair this episode
+holds in tension. No tagline, no music bed, no episode
+number. The cold open's job is to orient a first-time
+listener in roughly fifteen seconds, then hand off cleanly
+to Voice B's hook question.
+
+Example shape: "This is Dharma — two voices, one careful
+question per episode. Today: the Bhagavad Gītā's call to
+act without grasping at the fruit, set against the modern
+psychology of how we mispredict what the fruit will feel
+like."
+
+The cold open is delivered slightly slower than the rest of
+the episode (the engine sets a base TTS speed of 0.92, and
+the cold open should still feel slower within that — use
+short sentences and a pause beat between the two clauses).
+After the cold open, a 2.5-second silence beat, then
+Voice B's hook question.
+
 ### 7.1 HOOK — approximately 30 seconds
 
 A single concrete question or paradox the listener can hold
 in their head while listening. Stated by the student or the
 teacher. No preamble ("welcome back to..."), no episode-
-number recitation, no biographical setup. The hook is the
-first thing the listener hears after the show open.
+number recitation, no biographical setup. The hook follows
+immediately after the cold open's silence beat.
 
 Example shape: "If anattā says the self is not a thing, and
 Metzinger says the self is a model the brain makes — are
@@ -1141,9 +1181,25 @@ the rest of the episode established).
 
 ### 7.7 Pacing and dialogue rules
 
-- **Pause beats.** Two-to-three-second pauses are encouraged
-  after a question and after a quoted source. They do not
-  need to be filled. Silence is permitted.
+- **Base TTS speed = 0.92.** The engine sets ElevenLabs
+  voice_settings.speed to 0.92 for both voices. The
+  contemplative tone the show is after requires that the
+  speech sound unhurried; 1.0 reads as briskly conversational
+  and tips the show toward NPR-pace, which is wrong.
+- **Pause beats are explicit, not implicit.** Two- to
+  three-second silences after a question and a one- to
+  two-second beat after a quoted source. The script encodes
+  these directly using ElevenLabs' inline break syntax —
+  `<break time="2.5s" />` after a hook question, `<break
+  time="1.5s" />` after a primary-source quote, `<break
+  time="1.0s" />` between two sentences within a turn when
+  the second clause is a reframe. Ellipses `…` are used for
+  short within-sentence beats (≈ 400 ms) where the speaker
+  is leaving room to think. Do not rely on the TTS model to
+  insert pauses on its own; encode them.
+- **Pause beats (general).** Two-to-three-second pauses are
+  encouraged after a question and after a quoted source.
+  They do not need to be filled. Silence is permitted.
 - **Student interrupts.** When the teacher gets abstract or
   uses a term without defining it, the student interrupts.
   ("Wait — when you say 'consciousness,' do you mean the

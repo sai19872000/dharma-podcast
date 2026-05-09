@@ -78,13 +78,26 @@ Modern parallel: {paired_concept} — key thinkers: {paired_thinker}
 ---
 
 Write a two-voice dialogue script following the episode structure from soul.md §7:
-- HOOK → EAST PRIMARY SOURCE → WEST PARALLEL → CONVERGENCE + DIVERGENCE → SINGLE TAKEAWAY
-- 12–18 turns total. Voice A = teacher. Voice B = student.
-- 5–8 minutes of audio target. Pace: ~130 words/min spoken.
-- Each turn should be 1–4 sentences. Dialogue, not monologue.
+- COLD OPEN (Voice A solo, ~15–20s) → HOOK (Voice B) → EAST PRIMARY SOURCE → WEST PARALLEL → CONVERGENCE + DIVERGENCE → SINGLE TAKEAWAY
+- The FIRST turn MUST be a Voice A cold-open per soul.md §7.0: one sentence naming the show ("This is Dharma — two voices, one careful question per episode."), then one or two sentences naming THIS episode's concept pair. End the cold-open turn with `<break time="2.5s" />`. Then Voice B's hook follows.
+- 13–19 turns total INCLUDING the cold open. Voice A = teacher. Voice B = student.
+- 5–8 minutes of audio target. Pace assumes TTS speed=0.92 (slower than default).
+- Each turn 1–4 sentences. Dialogue, not monologue.
 - Embed at least one direct quote from the PD/CC0 corpus (Voice A reads it).
 - Modern thinkers paraphrased only — never lifted verbatim from books.
 - End with one precise takeaway from Voice A (not a moral lesson, a reframe).
+
+## Sanskrit / Pāli term density (HARD RULE — soul.md §1.2 binding)
+- Each Sanskrit/Pāli concept term is introduced **once** with an inline English gloss using an em-dash, e.g. `vairāgya — non-attachment`, `niṣkāma karma — action without grasping at outcome`, `sthitaprajña — the one of steady insight`.
+- After the introduction, **continue in English only**. Do NOT repeat the Sanskrit/Pāli term across the rest of the episode. At most ONE re-anchor of the original term is allowed if a turn truly needs to point back at the lineage.
+- Across the whole script, each Sanskrit/Pāli concept term appears at most TWICE total (introduction + at most one re-anchor).
+- Proper names of works, figures, and verses are exempt: Bhagavad Gītā, Yoga Sūtras, Mahābhārata, Patañjali, Krishna, Buddha, Soṇa, AN 5.30 — these stay as-is, do NOT count toward the density cap.
+- Verbatim quotes from the corpus are exempt — the quote stays exactly as the translator wrote it. The density rule applies only to the dialogue around the quote.
+
+## Pause / pacing directives (encode these inline)
+- Use ElevenLabs inline break syntax in turn text: `<break time="2.5s" />` after a hook question or after the cold open; `<break time="1.5s" />` after a primary-source verbatim quote; `<break time="1.0s" />` between two sentences within a turn when the second clause is a reframe of the first.
+- Use ellipses `…` (a single Unicode ellipsis character, not three periods) for short within-sentence beats where the speaker is leaving room to think — roughly 400 ms.
+- Do NOT use SSML wrappers like `<speak>…</speak>`. Only inline `<break time="X.Xs" />` and `…` are supported by the TTS path.
 
 Respond with ONLY a JSON object — no markdown fences, no preamble:
 {{
