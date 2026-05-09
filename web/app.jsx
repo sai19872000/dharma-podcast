@@ -19,7 +19,7 @@ const EP1 = {
   deva: 'वैराग्य',
   gloss: 'the loosening of the grip',
   duration: 402, // 6:42
-  audioSrc: 'https://dharma-podcast-audio.r2.dev/audio/001.mp3',
+  audioSrc: '/audio/001.mp3',
   publishedAt: 'May 8, 2026',
   chapters: [
     { t: 0,   label: 'Opening — what the word means' },
