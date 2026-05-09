@@ -1,0 +1,15 @@
+# dev_backend (T3) populates this directory per the architect spec module table:
+#
+#   concept_queue.py       — pick next concept; flock-guarded mutations
+#   corpus_loader.py       — PD-licensed quote excerpts for a concept
+#   script_gen.py          — soul.md + concept + excerpts → script.json
+#   tts.py                 — per-turn ElevenLabs API calls
+#   stitch.py              — ffmpeg concat
+#   normalize.py           — ffmpeg-normalize --preset podcast (two-pass)
+#   artifacts.py           — show_notes.md, citations.jsonl, pacing.json
+#                            (fail-fast license guard inside)
+#   publish.py             — R2 upload + feed.xml regen
+#                            (HALT guard: refuses Ep001 unless DHARMA_EP001_APPROVED=1)
+#   tg_notify.py           — tg_send.sh wrapper
+#
+# Target: each module ≤ 200 LOC.

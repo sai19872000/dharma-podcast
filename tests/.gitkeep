@@ -1,0 +1,9 @@
+# qa (T5) populates this directory.
+#
+# Required (per architect spec § Delegation map → qa_lead):
+#   test_audio_lufs.py        — verify -16 LUFS, TP ≤ -1.5, 5–8 min
+#   test_feed_validates.py    — RSS 2.0 + iTunes namespace passes podba.se / feedvalidator
+#   test_citations.py         — every quote has corpus_url + license ∈ allowlist
+#   test_show_notes.py        — show notes match script.json turns
+#
+# Visual QA on the landing page is a separate gate (see factory-visual-qa).

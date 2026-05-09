@@ -1,0 +1,10 @@
+# data agent (T2) populates this directory.
+#
+# Layout (per architect spec § Data flow Episode 001):
+#   gita_arnold/2.47-2.71.txt        license=PD
+#   gita_arnold/6.35.txt             license=PD
+#   yoga_sutras/1.12-1.16.txt        license=PD
+#   sujato_nibbida/AN-XX.txt         license=CC0
+#   affective_forecasting/notes.md   (paraphrase, talk citations)
+#
+# Each file's license is declared in the citation ledger row that quotes it.

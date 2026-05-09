@@ -1,0 +1,12 @@
+# Episode artifacts land here after a successful engine run.
+#
+# Per-episode layout:
+#   NNN/
+#     episode_NNN.mp3              # FINAL — committed (gitignore excludes raw/turn mp3s)
+#     episode_NNN.show_notes.md
+#     episode_NNN.citations.jsonl
+#     episode_NNN.pacing.json
+#     script.json                  # turns + ssml + soul.md sha
+#
+# `.gitignore` excludes turn_*.mp3 and episode_*_raw.mp3 (intermediate);
+# the final episode_NNN.mp3 ships with the repo.

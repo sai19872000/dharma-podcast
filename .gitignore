@@ -1,0 +1,28 @@
+# Audio artifacts — ship only the final, normalized episode
+*.wav
+episodes/*/turn_*.mp3
+episodes/*/episode_*_raw.mp3
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+
+# Node (Worker tooling only)
+node_modules/
+
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
+
+# Secrets — env-based per CLAUDE.md hard rule #3
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
