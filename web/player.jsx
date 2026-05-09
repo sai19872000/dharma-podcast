@@ -185,7 +185,7 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
     <div className="player">
       <div className="player-head">
         <div className="player-head-left">
-          <div className="player-stamp">◐ ep 001 · {fmt(duration)} · 5 citations</div>
+          <div className="player-stamp">◐ ep 001 · {fmt(duration)} · {episode.citations.length} citations</div>
           <h2 className="player-title">
             <span className="ep-deva">वैराग्य</span>
             <span className="ep-roman">Vairāgya</span>
@@ -297,11 +297,6 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
                 </button>
               );
             })}
-            <div className="tx-slot">
-              <span className="slot-stamp">slot</span>
-              full transcript will be inserted here once Episode 001 script is approved.
-              The lines above are draft markers for layout review.
-            </div>
           </div>
         )}
 
@@ -332,38 +327,34 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
           </div>
         )}
 
-        {activeTab === 'notes' && (
+        {activeTab === 'notes' && episode.showNotes && (
           <div className="notes">
             <div className="notes-section">
-              <div className="notes-stamp">show notes — what we read</div>
+              <div className="notes-stamp">what this episode explores</div>
+              <p>{episode.showNotes.whatItExplores}</p>
+            </div>
+            <div className="notes-section">
+              <div className="notes-stamp">primary source citations</div>
               <ul>
-                <li>Bhagavad Gītā 2.47–2.71 and 6.35 (Edwin Arnold, public domain)</li>
-                <li>Patañjali Yoga Sūtras 1.12–1.16 (multiple translations cross-read)</li>
-                <li>Sujato's translations from the Pali canon on <em>nibbidā</em> (CC0)</li>
-                <li>Daniel Gilbert &amp; Tim Wilson on affective forecasting</li>
+                {episode.showNotes.primarySources.map((s, i) => (
+                  <li key={i}>
+                    <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
+                    {' '}<span className="notes-detail">{s.detail}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="notes-section">
-              <div className="notes-stamp">soul.md — stance for this episode</div>
-              <p>
-                We are not selling stillness. We are reading three traditions
-                that, across two and a half millennia, all noticed the same
-                thing about the mind: it overestimates how much the next
-                acquisition will satisfy it. The Sanskrit word for that
-                mistake is <em>rāga</em>; the cog-sci word is <em>impact bias</em>.
-              </p>
+              <div className="notes-stamp">modern thinker context</div>
+              <p>{episode.showNotes.modernThinkerContext}</p>
             </div>
             <div className="notes-section">
-              <div className="notes-stamp">what this episode is not</div>
-              <p>
-                Not life advice. Not a prescription to renounce. Not a claim
-                that ancient texts "predicted" modern science. A careful
-                read across two languages of the same observation.
-              </p>
-            </div>
-            <div className="tx-slot">
-              <span className="slot-stamp">slot</span>
-              additional show notes (timestamps + per-chapter summaries) generated post-publish.
+              <div className="notes-stamp">soul.md — anti-patterns active this episode</div>
+              <ul>
+                {episode.showNotes.antiPatterns.map((p, i) => (
+                  <li key={i}>{p}</li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
