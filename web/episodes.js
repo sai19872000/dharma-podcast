@@ -11,7 +11,7 @@ window.EPISODES = {
     gloss: 'the loosening of the grip',
     duration: 402, // 6:42
     publishedAt: 'May 8, 2026',
-    audioSrc: 'https://dharma-podcast-audio.r2.dev/audio/001.mp3',
+    audioSrc: '/audio/001.mp3',
     chapters: [
       { t: 0,   label: 'Opening — what the word means' },
       { t: 74,  label: 'Gītā 2.47–71 — let the fruits go' },
