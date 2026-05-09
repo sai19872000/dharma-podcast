@@ -1,0 +1,10 @@
+# dev_frontend (T4) populates this directory with the Aura-branded
+# landing page + per-episode templates.
+#
+# Required (per architect spec § Component breakdown):
+#   index.html                — landing page with episode tile + player
+#   episode.html              — per-episode template
+#   feed.xml.template         — RSS 2.0 + iTunes namespace template
+#
+# Aura inheritance hooks (per factory-ui-design): mark / credit / boot /
+# selection. registry.saiteja.ai is the canonical source.

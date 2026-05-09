@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "_note": "Authoritative seed list from architect spec § API contracts → concept_queue.json. Data agent (T2) may extend; mutations through engine/concept_queue.py wrap writes in flock per ADR-8.",
+  "concepts": [
+    {
+      "slug": "vairagya",
+      "sanskrit": "वैराग्य",
+      "english": "non-attachment / dispassion",
+      "status": "drafted",
+      "paired_modern_concept": "affective forecasting",
+      "paired_thinker": "Gilbert/Wilson",
+      "scheduled_episode_no": 1
+    },
+    {
+      "slug": "anatta",
+      "pali": "अनत्ता",
+      "sanskrit": "अनात्मन्",
+      "english": "non-self",
+      "status": "queued",
+      "paired_modern_concept": "predictive self-model",
+      "paired_thinker": "Metzinger/Seth"
+    },
+    {
+      "slug": "atman",
+      "sanskrit": "आत्मन्",
+      "english": "self",
+      "status": "queued"
+    },
+    {
+      "slug": "dhyana",
+      "sanskrit": "ध्यान",
+      "english": "meditative absorption",
+      "status": "queued",
+      "paired_modern_concept": "attention-as-construction",
+      "paired_thinker": "Wallace/Seth"
+    },
+    {
+      "slug": "sakshi",
+      "sanskrit": "साक्षी",
+      "english": "witness consciousness",
+      "status": "queued"
+    },
+    {
+      "slug": "turiya",
+      "sanskrit": "तुरीय",
+      "english": "the fourth state",
+      "status": "queued"
+    },
+    {
+      "slug": "nibbida",
+      "pali": "निब्बिदा",
+      "english": "disenchantment",
+      "status": "queued"
+    },
+    {
+      "slug": "karma",
+      "sanskrit": "कर्म",
+      "english": "action / its fruit",
+      "status": "queued"
+    },
+    {
+      "slug": "dharma",
+      "sanskrit": "धर्म",
+      "english": "duty / law / way",
+      "status": "queued"
+    }
+  ]
+}
