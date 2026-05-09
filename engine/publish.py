@@ -12,8 +12,12 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import xml.sax.saxutils
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from engine.artifacts import _get_duration_seconds
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _EPISODES_INDEX = _REPO_ROOT / "episodes" / "index.json"
@@ -42,24 +46,56 @@ def _save_index(episodes: list[dict[str, Any]]) -> None:
         fh.write("\n")
 
 
+def _format_duration_hhmmss(seconds: float) -> str:
+    """Format duration seconds as HH:MM:SS for itunes:duration."""
+    total_secs = int(seconds)
+    h, rem = divmod(total_secs, 3600)
+    m, s = divmod(rem, 60)
+    return f"{h:02d}:{m:02d}:{s:02d}"
+
+
 def _build_feed_xml(episodes: list[dict[str, Any]], template: str) -> str:
     """Render RSS feed XML from template + episodes list."""
+    # P0-1: substitute all channel-level placeholders
+    SHOW = {
+        'SHOW_TITLE': 'Dharma',
+        'SHOW_LINK': 'https://dharma.saiteja.ai',
+        'SHOW_DESC': 'East contemplative lineages and modern consciousness science, in dialogue.',
+        'OWNER_EMAIL': os.environ.get('DHARMA_OWNER_EMAIL', ''),
+        'LAST_BUILD_DATE': datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S +0000'),
+    }
+
     items = []
     for ep in sorted(episodes, key=lambda e: e["episode_no"], reverse=True):
+        ep_no = ep['episode_no']
+        permalink = f"https://dharma.saiteja.ai/episodes/{ep_no:03d}"
+        # P2-1: escape XML-special chars in free-text fields
+        title_esc = xml.sax.saxutils.escape(ep['title'])
+        desc_esc = xml.sax.saxutils.escape(ep.get('description', ''))
         item = f"""    <item>
-      <title>{ep['title']}</title>
-      <description>{ep.get('description', '')}</description>
+      <title>{title_esc}</title>
+      <description>{desc_esc}</description>
       <pubDate>{ep['pub_date']}</pubDate>
-      <guid isPermaLink="false">dharma-ep{ep['episode_no']:03d}</guid>
-      <link>https://dharma.saiteja.ai/episodes/{ep['episode_no']:03d}</link>
-      <enclosure url="https://dharma.saiteja.ai/audio/{ep['episode_no']:03d}.mp3"
+      <guid isPermaLink="true">{permalink}</guid>
+      <link>{permalink}</link>
+      <enclosure url="https://dharma.saiteja.ai/audio/{ep_no:03d}.mp3"
                  type="audio/mpeg"
                  length="{ep.get('size_bytes', 0)}"/>
+      <itunes:title>{title_esc}</itunes:title>
+      <itunes:author>Sai Ram Labs</itunes:author>
+      <itunes:summary>{desc_esc}</itunes:summary>
       <itunes:duration>{ep.get('duration', '')}</itunes:duration>
+      <itunes:episode>{ep_no}</itunes:episode>
+      <itunes:episodeType>full</itunes:episodeType>
       <itunes:explicit>false</itunes:explicit>
     </item>"""
         items.append(item)
-    return template.replace("{ITEMS}", "\n".join(items))
+
+    feed_xml = template
+    for k, v in SHOW.items():
+        feed_xml = feed_xml.replace(f'{{{k}}}', v)
+    feed_xml = feed_xml.replace('{ITEMS}', '\n'.join(items))
+    return feed_xml
 
 
 def _r2_put(local_path: Path, r2_key: str) -> None:
@@ -103,8 +139,13 @@ def publish_episode(
 
     show_notes = episode_dir / f"episode_{episode_no:03d}.show_notes.md"
     description = ""
+    concept = ""
     if show_notes.exists():
         lines = show_notes.read_text(encoding="utf-8").split("\n")
+        # P1-4: extract concept from header line "# Episode 001 — Concept × pair"
+        if lines and "—" in lines[0]:
+            after_dash = lines[0].split("—", 1)[1].strip()
+            concept = after_dash.split("×")[0].strip().lstrip("#").strip()
         # Use first non-empty non-header line as description
         for line in lines:
             stripped = line.strip()
@@ -112,14 +153,20 @@ def publish_episode(
                 description = stripped[:200]
                 break
 
-    from datetime import datetime, timezone
+    # P1-4: include concept in title; fall back to plain format if unavailable
+    title = f"EP {episode_no:03d}: {concept}" if concept else f"Episode {episode_no:03d}"
+
+    # P1-1: compute actual duration via ffprobe and format as HH:MM:SS
+    duration_s = _get_duration_seconds(mp3_path)
+    duration_str = _format_duration_hhmmss(duration_s) if duration_s > 0 else ""
+
     episodes.append({
         "episode_no": episode_no,
-        "title": f"Episode {episode_no:03d}",
+        "title": title,
         "pub_date": datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000"),
         "size_bytes": size_bytes,
         "description": description,
-        "duration": "",
+        "duration": duration_str,
     })
     _save_index(episodes)
 
