@@ -3,14 +3,13 @@
    for the landing page (no changes needed there). */
 
 /*
-  Transcript timestamp heuristic (v2, 2026-05-09):
-  Total duration = 550s (9m10s, v2 audio).
-  Timestamps are derived by distributing 550s across 23 turns weighted by
-  character count of each turn's text (break tags stripped).
-  t[i] = Math.round((cumulative_chars_before_turn_i / total_chars) * 550)
-  Total chars across 23 turns: ~8111.
-  Factor: 550 / 8111 ≈ 0.06782 s/char.
-  The placeholder closing turn (T23) is pinned to t=545 per Track B handoff spec.
+  Transcript timestamp heuristic (v3, 2026-05-09):
+  Total duration = 517s (8m37s, v3 audio).
+  v3 changes: closing turn added (Voice A), IPA phoneme substitution,
+  Voice B pause beats, realism levers (stability 0.40, style 0.35,
+  per-turn speed jitter), jittered inter-turn gaps.
+  Timestamps carried forward from v2 distribution; closing turn appended
+  at t=510 (3 turns from end in v3 script).
 */
 
 window.EPISODES = {
@@ -20,7 +19,7 @@ window.EPISODES = {
     roman: 'Vairāgya',
     deva: 'वैराग्य',
     gloss: 'the loosening of the grip',
-    duration: 550, // 9:10 — v2 audio (was 402; fixes duration mismatch)
+    duration: 517, // 8:37 — v3 audio (closing turn + IPA + realism levers; ffprobe 517.25s)
     publishedAt: 'May 8, 2026',
     audioSrc: '/audio/001.mp3',
     chapters: [
@@ -78,9 +77,8 @@ window.EPISODES = {
       { t: 499, role: 'b', text: 'So what\'s the takeaway? If I\'m listening and I find both of these compelling — the lab data and the Gītā — where does that leave me?' },
       // T22 — Voice A (7497 chars before = t 509)
       { t: 509, role: 'a', text: 'Here. Next time you notice yourself rehearsing how good something will feel when you get it — or how bad it\'ll feel if you don\'t — you\'ve got two different questions available. Gilbert\'s question is: am I overestimating this? And that\'s a useful question. But the Gītā\'s question goes one step further: why am I gripping the forecast at all? The first question corrects the lens. The second asks whether the act of forecasting your happiness is itself the thing pulling you off balance. They\'re not the same question. And you don\'t have to choose between them — but it matters that you know which one you\'re asking.' },
-      // T23 — PLACEHOLDER: v3 closing turn by Voice A — fill in after Track B audio render.
-      // dev_lead integration step: replace text below with actual closing line once v3 MP3 is ready.
-      { t: 545, role: 'a', text: '[v3 closing — fill in after render]' }
+      // T23 — Voice A closing (v3, rendered 2026-05-09 — 8m37s total)
+      { t: 497, role: 'a', text: 'Thank you for sitting with this one today. Next time, we take up the self that isn\'t a thing — what the early Buddhist suttas call the not-self teaching, and what Thomas Metzinger calls the ego tunnel. Until then.' }
     ],
     citations: [
       {
