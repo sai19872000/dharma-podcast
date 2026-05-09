@@ -1,0 +1,78 @@
+{
+  "concept": "vairagya",
+  "verified_date": "2026-05-08",
+  "sources": [
+    {
+      "file": "gita_arnold_2.47-2.71.txt",
+      "tradition": "east-lineage",
+      "work": "Bhagavad Gita 2.47\u20132.71",
+      "translator": "Edwin Arnold (1885)",
+      "verse_or_section": "2.47\u20132.71",
+      "license": "PD",
+      "citation_url": "https://www.sacred-texts.com/hin/gita/bg02.htm",
+      "fetch_url": "https://en.wikisource.org/w/index.php?title=The_Bhagavad_Gita_(Arnold_translation)/Chapter_2&action=raw",
+      "verified_date": "2026-05-08",
+      "note": "Edwin Arnold died 1904 (UK life+70 expired 1974; US pre-1928). Poem is continuous; verses 2.47\u20132.71 are the karma-yoga teaching and description of the sthitapraj\u00f1a."
+    },
+    {
+      "file": "gita_arnold_6.35.txt",
+      "tradition": "east-lineage",
+      "work": "Bhagavad Gita 6.35\u201336",
+      "translator": "Edwin Arnold (1885)",
+      "verse_or_section": "6.35\u201336",
+      "license": "PD",
+      "citation_url": "https://www.sacred-texts.com/hin/gita/bg06.htm",
+      "fetch_url": "https://en.wikisource.org/w/index.php?title=The_Bhagavad_Gita_(Arnold_translation)/Chapter_6&action=raw",
+      "verified_date": "2026-05-08",
+      "note": "Arjuna questions the stability of yoga; Krishna answers with abhy\u0101sa (practice). Included as the mind-taming companion to the fruit-renunciation teaching of ch. 2."
+    },
+    {
+      "file": "yoga_sutras_1.12-1.16.txt",
+      "tradition": "east-lineage",
+      "work": "Yoga S\u016btras 1.12\u20131.16",
+      "translator": "Swami Vivekananda (1896)",
+      "verse_or_section": "1.12\u20131.16",
+      "license": "PD",
+      "citation_url": "https://www.sacred-texts.com/hin/yogasutr.htm",
+      "fetch_url": "https://en.wikisource.org/w/index.php?title=The_Complete_Works_of_Swami_Vivekananda/Volume_1/Raja-Yoga/Patanjali%27s_Yoga_Aphorisms_-_Concentration:_Its_Spiritual_Uses&action=raw",
+      "verified_date": "2026-05-08",
+      "note": "Vivekananda died 1902 (US pre-1923). S\u016btras on abhy\u0101sa (practice) and vair\u0101gya (non-attachment) as the two instruments for controlling vr\u0304ttis. S\u016btra 1.16 defines para-vair\u0101gya (supreme non-attachment) via knowledge of the Puru\u1e63a."
+    },
+    {
+      "file": "sujato_nibbida_AN5.30.txt",
+      "tradition": "east-lineage",
+      "work": "Anguttara Nik\u0101ya 5.30 \u2014 With N\u0101gita",
+      "translator": "Bhante Sujato (SuttaCentral, 2018)",
+      "verse_or_section": "AN 5.30",
+      "license": "CC0",
+      "citation_url": "https://suttacentral.net/an5.30/en/sujato",
+      "fetch_url": "https://raw.githubusercontent.com/suttacentral/bilara-data/published/translation/en/sujato/sutta/an/an5/an5.30_translation-en-sujato.json",
+      "verified_date": "2026-05-08",
+      "note": "CC0 confirmed from SuttaCentral bilara-data repo. Sutta on the five outcomes that generate nibbid\u0101 (disenchantment / vair\u0101gya). The Buddha distinguishes the pleasure of renunciation from the filthy pleasure of popularity."
+    },
+    {
+      "file": "sujato_nibbida_AN6.55.txt",
+      "tradition": "east-lineage",
+      "work": "Anguttara Nik\u0101ya 6.55 \u2014 With So\u1e47a",
+      "translator": "Bhante Sujato (SuttaCentral, 2018)",
+      "verse_or_section": "AN 6.55",
+      "license": "CC0",
+      "citation_url": "https://suttacentral.net/an6.55/en/sujato",
+      "fetch_url": "https://raw.githubusercontent.com/suttacentral/bilara-data/published/translation/en/sujato/sutta/an/an6/an6.55_translation-en-sujato.json",
+      "verified_date": "2026-05-08",
+      "note": "CC0 confirmed. Lute-string simile on balanced effort. The six dedications of the perfected one (renunciation, seclusion, kindness, ending of craving, ending of grasping, clarity) parallel the Gīt\u0101's framing of vair\u0101gya. Closing rock-in-storm image parallels Arnold BG 2.70."
+    },
+    {
+      "file": "affective_forecasting_notes.md",
+      "tradition": "west-thinker",
+      "work": "Gilbert & Wilson \u2014 Affective Forecasting (paraphrase notes)",
+      "translator": null,
+      "verse_or_section": "impact bias, focalism, immune neglect, durability bias",
+      "license": "PARAPHRASE",
+      "citation_url": "https://www.ted.com/talks/dan_gilbert_the_surprising_science_of_happiness",
+      "fetch_url": null,
+      "verified_date": "2026-05-08",
+      "note": "PARAPHRASE: do NOT include in citations.jsonl (soul.md \u00a75.2 quotes-only). File is for script_gen.py as modern thread context only. Show notes should credit Gilbert/Wilson and link to DOI references listed in the file."
+    }
+  ]
+}
