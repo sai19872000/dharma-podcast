@@ -1,0 +1,26 @@
+# Bhagavad Gita — Chapter VI ("Of Religion of Self-Restraint")
+# Edwin Arnold, "The Song Celestial" (1885)
+# Verse 6.35 — Arjuna's question on the untamed mind + Krishna's reply
+# License: Public Domain (Arnold died 1904; US pre-1928)
+# Citation URL: https://www.sacred-texts.com/hin/gita/bg06.htm
+# Fetch URL: https://en.wikisource.org/w/index.php?title=The_Bhagavad_Gita_(Arnold_translation)/Chapter_6&action=raw
+# Note: Arnold's translation is continuous poetry without numbered verses;
+# the passage below corresponds to BG 6.35 (Arjuna on the restless mind)
+# and 6.36 (Krishna's reply on restraint through abhyāsa / practice).
+# Verified reachable 2026-05-08.
+
+Arjuna. Slayer of Madhu! yet again, this Yog,
+This Peace, derived from equanimity,
+Made known by thee — I see no fixity
+Therein, no rest, because the heart of men
+Is unfixed, Krishna! rash, tumultuous,
+Wilful and strong. It were all one, I think,
+To hold the wayward wind, as tame man's heart.
+
+Krishna. Hero long-armed! beyond denial, hard
+Man's heart is to restrain, and wavering;
+Yet may it grow restrained by habit, Prince!
+By wont of self-command. This Yog, I say,
+Cometh not lightly to th' ungoverned ones;
+But he who will be master of himself
+Shall win it, if he stoutly strive thereto.

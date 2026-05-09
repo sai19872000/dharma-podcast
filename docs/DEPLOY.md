@@ -12,23 +12,30 @@
 | RSS + landing Worker | Cloudflare Workers | `dharma-podcast-rss` | TBD `worker/wrangler.toml` |
 | DNS | Cloudflare zone `saiteja.ai` | `dharma.saiteja.ai` CNAME → Worker, **no Access** | CF dashboard / API |
 
-## Bootstrap status (run `20260508_212326`)
+## Bootstrap status (run `20260509_085103` — PARTIAL deploy, static-only)
 
 | Step | Status | Notes |
 |------|--------|-------|
 | GitHub repo created | ✅ | `gh repo create sai19872000/dharma-podcast --public` |
 | Project registered | ✅ | `~/factory/scripts/update_projects.sh add …` |
 | Local clone | ✅ | `~/dharma-podcast` |
-| Repo skeleton (this PR) | ✅ | `bootstrap-skeleton` branch |
+| Repo skeleton (PR #1) | ✅ | merged 2026-05-08 |
 | `soul.md` checked in | ✅ | Verbatim from research_lead delivery |
 | `concept_queue.json` seeded | ✅ | 9 concepts; vairagya `drafted`, rest `queued` |
-| R2 bucket `dharma-podcast-audio` | ⚠️ **BLOCKED** | See § Access blocker |
-| Worker `dharma-podcast-rss` | ⏸ deferred | After R2 unblock |
-| DNS `dharma.saiteja.ai` CNAME | ⏸ deferred | After Worker exists |
-| Engine implementation (T3) | ⏸ awaiting dev_backend | dev_lead's directive |
-| Corpus staging (T2) | ⏸ awaiting data | dev_lead's directive |
-| Aura landing (T4) | ⏸ awaiting dev_frontend | dev_lead's directive |
-| Episode 001 publish | ⏸ HALT-guarded | `DHARMA_EP001_APPROVED=1` required |
+| Engine (PR #4) | ✅ merged | publish.py + feed XML render + iter-2 P0/P1 fixes |
+| Aura landing (PR #2) | ⏸ open | `feat/web-landing` — deployed from branch via Worker assets, awaiting T3 QA verdict before merge |
+| R2 bucket `dharma-podcast-audio` | ⚠️ **BLOCKED-ON-SAI** | R2 not enabled at the account level (10042). One-click toggle at `https://dash.cloudflare.com/?to=/:account/r2`. L3 ping sent 2026-05-09 13:05Z. |
+| Audio upload `audio/001.mp3` | ⏸ deferred | After R2 toggle. Source: `episodes/001/episode_001.mp3` (6,201,722 bytes; sha256 `b50f27931cd4f07a56b1eb458db4eb2788fc8648ba941878ecfafc13dec59d0c`) |
+| Worker `dharma-podcast-rss` | ✅ deployed | Version `d5d71a3d-298a-456e-9779-9498d981703d` (2026-05-09); serves `web/` via `[assets]` binding. Route: `dharma.saiteja.ai/*`. |
+| DNS `dharma.saiteja.ai` CNAME | ✅ live | proxied → `dharma-podcast-rss.workers.dev`, record id `a6499f9ba67d790998171fbadf592faf`. No CF Access (RSS readers need anonymous reach). |
+| `web/feed.xml` rendered | ✅ static | Single Episode 001 item; SHOW dict mirrors `engine/publish.py`. Re-render via `engine.publish` once R2 enabled (replaces this static file with one whose enclosure URL works). |
+| Episode 001 publish (audio → R2) | ⏸ HALT-guarded | `DHARMA_EP001_APPROVED=1` AND R2 enabled |
+
+### Verification (2026-05-09 13:06Z)
+- `https://dharma.saiteja.ai/` → HTTP 200, 1377 B, `text/html`
+- `https://dharma.saiteja.ai/feed.xml` → HTTP 200, 5701 B, `application/xml`, valid RSS, 1 item
+- `https://dharma.saiteja.ai/e/001/` → HTTP 200, 3245 B, `text/html`
+- `https://dharma-podcast-audio.r2.dev/audio/001.mp3` → HTTP 500 (R2 disabled — expected; player falls back to simulated mode)
 
 ## Access blocker
 

@@ -1188,6 +1188,35 @@ If the engine cannot produce a citation ledger row that
 satisfies § 5.1 and § 5.3 for any quote in the script, the
 run fails. No episode ships without a clean ledger.
 
+### 7.9 Closing turn (binding from Ep001 v3 onward)
+
+Every episode **must end** with a Voice A solo closing turn.
+The closing mirrors the cold-open in structure but not in
+content — it is the bow after the conversation, not a
+recap of it.
+
+**Rules:**
+- Voice A only — no Voice B in the closing turn.
+- Target length: ~12–18 seconds of spoken audio (roughly
+  2–3 unhurried sentences at TTS speed=0.92).
+- Tone: contemplative, not celebratory. The closing is the
+  exhale after the takeaway lands, not a marketing plug.
+- Content: a brief thanks for listening (one clause is
+  enough), optionally one line teasing the next episode's
+  question (name the concept or the tension, not the guest
+  or episode number). Do not summarise the episode.
+- Encoding: end the closing turn with `<break time="1.5s" />`
+  to give the listener a moment before the audio ends.
+- Position: the closing is the LAST turn in the script
+  (index N-1). The takeaway is the turn immediately before
+  it (index N-2, still Voice A). The closing is structurally
+  separate from the takeaway — do not merge them.
+
+**Example shape:**
+  "Thank you for sitting with this question today. Next time,
+  we take up a different kind of attention — the kind the
+  Yoga Sūtras call witnessing. Until then. <break time="1.5s" />"
+
 ---
 
 ## 8. Closing note for the engine
