@@ -1,7 +1,12 @@
-# Audio artifacts — ship only the final, normalized episode
+# Audio artifacts — not committed; delivered via Telegram + R2
 *.wav
+*.mp3
 episodes/*/turn_*.mp3
 episodes/*/episode_*_raw.mp3
+episodes/*/_silence_*.mp3
+
+# TTS turn cache — re-generatable from ElevenLabs API
+cache/
 
 # Python
 __pycache__/
