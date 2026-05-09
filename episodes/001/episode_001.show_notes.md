@@ -1,6 +1,6 @@
 # Episode 001 — Vairagya × affective forecasting
 
-**Duration:** 8:37  
+**Duration:** 8:18  
 **Soul.md version:** `9fa2d9d19d57`
 
 ---

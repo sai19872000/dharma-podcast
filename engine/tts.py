@@ -1,20 +1,24 @@
 """
 tts.py — ElevenLabs TTS for each dialogue turn.
 
-Caches rendered turns by sha256(voice_id + phoneme_text + settings_fp) to
+Caches rendered turns by sha256(voice_id + raw_text + settings_fp) to
 avoid re-billing. Cache lives at <repo_root>/cache/turn_<sha>.mp3
 
-v3 changes (Ep001 v3):
-  - Phoneme substitution: Sanskrit/Pāli terms wrapped in IPA phoneme tags
-    before sending to ElevenLabs (via engine/pronunciation.py).
-  - Realism levers applied (2 of 3 selected):
-      1. stability lowered to 0.40 (more expressive prosody variance)
-      2. style raised to 0.35 (emotional texture; gated behind try/except)
-      3. per-turn jittered speed: N(0.92, 0.02²) clipped to [0.90, 0.94]
-         — voice_settings passed per-turn rather than module-level constant
-    speed=0.92 baseline kept; style lever gated since some models reject it.
-  - Cache key now includes phoneme-substituted text (not raw text), so IPA
-    tag changes bust cached audio naturally.
+v4 reverts (Ep001 v4):
+  - IPA phoneme substitution: REMOVED. pronunciation.apply_phoneme_substitution()
+    is now a no-op. multilingual_v2 silently drops <phoneme> tags; plain text
+    performs better and avoids the accent-shift side-effect.
+  - style: REVERTED to 0.0 (was 0.35 in v3). style on multilingual_v2 amplifies
+    the model's interpretation of accent cues — most likely culprit for the
+    Indian-intonation shift observed in v3 listen.
+  - stability: REVERTED to 0.60 (was 0.40 in v3). 0.40 combined with style=0.35
+    added enough expressivity variance to compound the accent shift; back to v2
+    baseline for a stable, neutral delivery.
+  - speed jitter: KEPT. N(0.92, 0.02²) per-turn jitter is subtle and accent-
+    neutral; it adds conversational realism without shifting the voice character.
+  - Cache key: now uses raw_text (phoneme_text == raw_text since substitution
+    is a no-op, so this change is cosmetic but clarifies intent). Naturally busts
+    all v3 cached turns.
 
 Public API:
     render_turns(turns, episode_dir) -> list[Path]
@@ -40,17 +44,17 @@ _CACHE_DIR = _REPO_ROOT / "cache"
 # ElevenLabs model — use multilingual v2 for quality; turbo as fallback
 _MODEL_ID = "eleven_multilingual_v2"
 
-# Base voice settings (v3 realism levers applied):
-#   - stability: 0.40 (down from 0.60) → more expressive prosody variance
-#   - style: 0.35 (up from 0.0) → emotional texture; gated in _build_settings()
-#   - speed: 0.92 baseline, jittered ±0.02 per-turn in render_turns()
-# Realism levers chosen: (1) stability, (2) style, (3) per-turn speed jitter.
-# Lever (2) style is gated: some ElevenLabs models reject the field, so we
-# try/except on the first call and omit it if the model rejects it.
+# Base voice settings (v4 reverts):
+#   - stability: 0.60 — restored from v3's 0.40; 0.40 + style=0.35 compounded
+#     accent shift on multilingual_v2; back to v2 neutral baseline.
+#   - style: 0.0 — removed v3's 0.35; style amplifies accent cues on
+#     multilingual_v2 and was the primary driver of Indian-intonation shift.
+#   - speed: 0.92 baseline, jittered ±0.02 per-turn (kept — accent-neutral,
+#     adds conversational realism without shifting voice character).
 _BASE_VOICE_SETTINGS: dict[str, Any] = {
-    "stability": 0.40,
+    "stability": 0.60,
     "similarity_boost": 0.75,
-    "style": 0.35,
+    "style": 0.0,
     "use_speaker_boost": True,
     "speed": 0.92,  # baseline; jittered per-turn in render_turns()
 }
@@ -121,8 +125,8 @@ def render_turns(
     Output filenames: turn_NNN_A.mp3 or turn_NNN_B.mp3 in episode_dir.
     Cache location: <repo>/cache/turn_<sha>.mp3
 
-    v3: applies IPA phoneme substitution before TTS; uses per-turn jittered
-    speed; lowers stability and raises style for realism.
+    v4: sends raw text to TTS (IPA phoneme substitution reverted); uses per-turn
+    jittered speed; stability=0.60 and style=0.0 (v3 realism levers reverted).
     """
     global _style_supported
 
@@ -143,16 +147,18 @@ def render_turns(
         raw_text = turn["text"]
         voice_id = _get_voice_id(voice_label)
 
-        # Apply IPA phoneme substitution — changes input text so cache
-        # will naturally miss for v3 (different text → different sha).
-        phoneme_text = apply_phoneme_substitution(raw_text)
+        # v4: apply_phoneme_substitution is a no-op; raw_text is sent directly.
+        # Cache key uses raw_text (naturally busts all v3 cache entries which
+        # were keyed on phoneme-substituted text).
+        _ = apply_phoneme_substitution  # imported but now a no-op; kept for API stability
+        tts_text = raw_text
 
-        # Per-turn jittered speed (realism lever 3)
+        # Per-turn jittered speed (kept from v3 — accent-neutral realism lever)
         speed = _jittered_speed()
         settings = _build_settings(speed)
 
         out_path = episode_dir / f"turn_{idx:03d}_{voice_label}.mp3"
-        sha = _cache_key(voice_id, phoneme_text, settings)
+        sha = _cache_key(voice_id, tts_text, settings)
         cache_path = _CACHE_DIR / f"turn_{sha}.mp3"
 
         if cache_path.exists():
@@ -174,7 +180,7 @@ def render_turns(
                 audio_bytes = b"".join(
                     client.text_to_speech.convert(
                         voice_id=voice_id,
-                        text=phoneme_text,
+                        text=tts_text,
                         model_id=_MODEL_ID,
                         voice_settings=dict(settings),
                         output_format="mp3_44100_128",
