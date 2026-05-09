@@ -3,13 +3,16 @@
    for the landing page (no changes needed there). */
 
 /*
-  Transcript timestamp heuristic (v3, 2026-05-09):
-  Total duration = 517s (8m37s, v3 audio).
-  v3 changes: closing turn added (Voice A), IPA phoneme substitution,
-  Voice B pause beats, realism levers (stability 0.40, style 0.35,
-  per-turn speed jitter), jittered inter-turn gaps.
-  Timestamps carried forward from v2 distribution; closing turn appended
-  at t=510 (3 turns from end in v3 script).
+  Transcript timestamp heuristic (v4, 2026-05-09):
+  Source: v4 script.json (22 turns — IPA reverted, sthitaprajña removed,
+  post-Student gaps tightened to 350ms, closing turn intact).
+  Method: char-proportional distribution over v4 actual duration.
+    t[i] = round((cumulative_chars_before_turn_i / total_chars) * duration)
+    total_chars = 7181 (break tags stripped)
+    duration = 498s (v4 actual; v3 was 517s — 19s shorter due to gap tightening)
+  Citations: BG 2.47 (t=45), BG 2.56 (t=86), YS 1.15 (t=133), AN 6.55 (t=359).
+  v4 changes vs v3: sthitaprajña removed from T4; YS 1.15 citation added;
+  AN 5.30 corrected to AN 6.55; transcript tracks v4 script.json directly.
 */
 
 window.EPISODES = {
@@ -19,66 +22,62 @@ window.EPISODES = {
     roman: 'Vairāgya',
     deva: 'वैराग्य',
     gloss: 'the loosening of the grip',
-    duration: 517, // 8:37 — v3 audio (closing turn + IPA + realism levers; ffprobe 517.25s)
+    duration: 498, // v4 actual: 498s (8m18s); v3 was 517s. Shorter: post-Student gaps fixed 350ms + sthitaprajña removed
     publishedAt: 'May 8, 2026',
     audioSrc: '/audio/001.mp3',
     chapters: [
       { t: 0,   label: 'Cold open — the question worth sitting with' },
-      { t: 66,  label: 'Gītā 2.47–56 — let right deeds be thy motive' },
+      { t: 45,  label: 'Gītā 2.47–56 — let right deeds be thy motive' },
       { t: 161, label: 'Affective forecasting — impact bias & immune neglect' },
-      { t: 295, label: 'The fault line — calibration vs. niṣkāma karma' },
-      { t: 405, label: 'Buddhist parallel — AN 5.30 & Soṇa' },
-      { t: 499, label: 'Closing — two questions' }
+      { t: 291, label: 'The fault line — calibration vs. niṣkāma karma' },
+      { t: 359, label: 'Buddhist parallel — AN 6.55 & Soṇa' },
+      { t: 483, label: 'Closing — two questions' }
     ],
     transcript: [
-      // T0 — Voice A (0 chars before = t 0)
-      { t: 0,   role: 'a', text: 'This is Dharma — two voices, one careful question per episode. Today: the Bhagavad Gītā\'s teaching on non-attachment to the fruit of action, held against the modern psychology of how badly we mispredict what the fruit will actually feel like.' },
-      // T1 — Voice B (243 chars before = t 17)
-      { t: 17,  role: 'b', text: 'So here\'s the thing that caught me. Krishna tells Arjuna to act without grasping at the outcome. And then twenty-five centuries later, Dan Gilbert\'s lab at Harvard finds that people are systematically wrong about how outcomes will make them feel. Are they noticing the same problem… or just rhyming?' },
-      // T2 — Voice A (543 chars before = t 37)
-      { t: 37,  role: 'a', text: 'That\'s the question worth sitting with. Let\'s start with the Gītā\'s side. The concept is vairāgya — non-attachment, sometimes translated as dispassion, though dispassion makes it sound cold and it isn\'t. Krishna\'s argument in Chapter Two is surprisingly specific. He doesn\'t say stop acting. He says stop letting the imagined reward be the reason you act.' },
-      // T3 — Voice B (900 chars before = t 61)
-      { t: 61,  role: 'b', text: 'Can you read the passage? I want to hear exactly how Arnold renders it.' },
-      // T4 — Voice A (971 chars before = t 66) — cited: Bhagavad Gita 2.47
-      { t: 66,  role: 'a', text: 'This is Edwin Arnold\'s 1885 translation, from roughly verse 2.47 onward. Krishna says: "But thou, want not! ask not! Find full reward of doing right in right! Let right deeds be thy motive, not the fruit which comes from them. And live in action! Labour! Make thine acts thy piety, casting all self aside, contemning gain and merit; equable in good or evil: equability is Yog, is piety!" Notice what he\'s not saying. He\'s not saying outcomes don\'t matter. He\'s saying the attachment to outcomes — the way we grip the imagined fruit before we\'ve even acted — that\'s what distorts both the action and the actor.', cite: 'Bhagavad Gita 2.47', citeShort: 'BG 2.47' },
-      // T5 — Voice B (1585 chars before = t 108)
-      { t: 108, role: 'b', text: 'And then Arjuna pushes back. He asks what that person actually looks like — the one who\'s managed this. He calls it the one of steady insight, the sthitaprajña — the one of steady insight. How does that person sit, move, speak?' },
-      // T6 — Voice A (1815 chars before = t 123) — cited: Bhagavad Gita 2.56
-      { t: 123, role: 'a', text: 'Right, and Krishna\'s description is remarkable. Arnold renders it: "In sorrows not dejected, and in joys not overjoyed; dwelling outside the stress of passion, fear, and anger; fixed in calms of lofty contemplation — such an one is Muni, is the Sage, the true Recluse!" That\'s not numbness. The person still encounters sorrow and joy. They\'re just not thrown by either one. And then the ocean image at the end of Chapter Two — the person of steady insight is like the ocean receiving rivers without overflowing. Floods come in. The boundary holds.', cite: 'Bhagavad Gita 2.56', citeShort: 'BG 2.56' },
-      // T7 — Voice B (2371 chars before = t 161)
-      { t: 161, role: 'b', text: 'Okay, so that\'s the Gītā\'s picture. Now, Gilbert and Wilson — they\'re working a completely different problem, right? They\'re not asking how to relate to outcomes. They\'re asking why our predictions about outcomes are so consistently wrong.' },
-      // T8 — Voice A (2610 chars before = t 177)
-      { t: 177, role: 'a', text: 'Exactly. Starting in the late nineties, they documented what they call impact bias — the systematic tendency to overestimate how intensely and how long a future event will affect your wellbeing. You get the promotion, and it matters less than you thought. You lose the relationship, and you recover faster than you predicted. The direction of the prediction is usually right — good things feel good, bad things feel bad — but the magnitude and duration are inflated.' },
-      // T9 — Voice B (3075 chars before = t 209)
-      { t: 209, role: 'b', text: 'And they found specific mechanisms behind this?' },
-      // T10 — Voice A (3123 chars before = t 212)
-      { t: 212, role: 'a', text: 'Three main ones. First, focalism — when you imagine a future event, you zoom in on it and forget that the rest of your life will still be happening around it. Second, what they call immune neglect — you have a psychological immune system that rationalizes, reframes, finds meaning in bad outcomes, but you consistently forget it exists when you\'re predicting. And third, the durability bias — adaptation happens faster than you expect. Gilbert\'s TED talk puts it simply: people can synthesize happiness from almost any outcome, yet they routinely believe they can\'t.' },
-      // T11 — Voice B (3688 chars before = t 250)
-      { t: 250, role: 'b', text: 'So both the Gītā and the lab are saying… the fruit isn\'t what you think it is. The payoff you\'re gripping doesn\'t arrive the way you imagined.' },
-      // T12 — Voice A (3832 chars before = t 260)
-      { t: 260, role: 'a', text: 'That\'s the convergence, and it\'s genuine. Both traditions observe that the anticipated emotional payoff of attainment is not what gets delivered. The Gītā watches Arjuna agonize over outcomes that haven\'t happened yet, and Krishna says the agonizing itself is the problem. Gilbert watches experimental subjects overestimate the impact of outcomes that have happened, and he says the prediction mechanism is the problem. Same phenomenon — the mind inflates the fruit — noticed from two completely different angles.' },
-      // T13 — Voice B (4343 chars before = t 295)
-      { t: 295, role: 'b', text: 'But the prescriptions diverge. Gilbert says correct your prediction. Krishna says… something deeper than that.' },
-      // T14 — Voice A (4454 chars before = t 302) — cited: AN 5.30 (via turn_idx in JSONL)
-      { t: 302, role: 'a', text: 'That\'s exactly the fault line. Gilbert\'s recommendation is calibrational — know your bias, adjust your forecast, expect that the promotion will matter less than you think. It\'s an epistemic fix. The Gītā\'s move is different in kind. It\'s not saying predict better. It\'s saying the whole stance of acting-for-the-sake-of-the-outcome is where suffering takes root. The concept Krishna introduces is niṣkāma karma — action without grasping at outcome. That\'s not improved forecasting. That\'s a different relationship to action itself. You act because the action is right, not because you\'ve calculated what the fruit will feel like.', cite: 'Anguttara Nikāya 5.30 — With Nāgita', citeShort: 'AN 5.30' },
-      // T15 — Voice B (5086 chars before = t 345)
-      { t: 345, role: 'b', text: 'So one is adjusting the lens and the other is… questioning why you\'re looking through a lens at all.' },
-      // T16 — Voice A (5187 chars before = t 352)
-      { t: 352, role: 'a', text: 'Yes. And there\'s a structural reason for that difference. Gilbert is doing empirical psychology. His question is descriptive: how does this cognitive mechanism work, and where does it go wrong? The Gītā is embedded in a whole account of the self-as-doer. Krishna\'s diagnosis is that the problem isn\'t just a miscalibrated prediction — it\'s the identification with being the one who reaps the fruit. Patañjali makes the same point in the Yoga Sūtras: non-attachment isn\'t a technique for feeling better. It\'s what happens when you stop mistaking mental activity for your identity.' },
-      // T17 — Voice B (5765 chars before = t 391)
-      { t: 391, role: 'b', text: 'There\'s a Buddhist parallel too, isn\'t there? The Buddha in AN 5.30 draws a sharp line between… I think he calls it the pleasure of renunciation and the filthy pleasure of possessions and popularity.' },
-      // T18 — Voice A (5966 chars before = t 405)
-      { t: 405, role: 'a', text: 'He does. He\'s sitting in a forest near Icchānaṅgala and a crowd arrives with food and fanfare, and the Buddha says to his attendant Nāgita: "May I never become famous. May fame not come to me. There are those who can\'t get the pleasure of renunciation, the pleasure of seclusion, the pleasure of peace, the pleasure of awakening when they want, without trouble or difficulty like I can. Let them enjoy the filthy, lazy pleasure of possessions, honor, and popularity." And then he runs through a sequence: what you eat ends as excrement, loved ones perish and grief follows, impermanence is visible everywhere. He\'s not moralizing. He\'s describing what the outcome actually is when you trace it to completion.' },
-      // T19 — Voice B (6676 chars before = t 453)
-      { t: 453, role: 'b', text: 'Which is almost what Gilbert is doing with data — tracing the outcome to completion and showing it doesn\'t match the forecast.' },
-      // T20 — Voice A (6802 chars before = t 461)
-      { t: 461, role: 'a', text: 'Almost. But the Buddha\'s version ends somewhere Gilbert\'s doesn\'t. The Buddha\'s sequence leads to a trained seeing-through — not a corrected prediction but a release of the grip itself. And Soṇa\'s story in AN 6.55 shows what that looks like in practice: the lute strings tuned neither too tight nor too slack, effort and serenity in balance. And when Soṇa reaches that balance, he describes himself as steady, imperturbable — like a solid rock that the wind cannot stir. That\'s the same image as the Gītā\'s ocean. Not numb. Not indifferent. Just… not thrown.' },
-      // T21 — Voice B (7363 chars before = t 499)
-      { t: 499, role: 'b', text: 'So what\'s the takeaway? If I\'m listening and I find both of these compelling — the lab data and the Gītā — where does that leave me?' },
-      // T22 — Voice A (7497 chars before = t 509)
-      { t: 509, role: 'a', text: 'Here. Next time you notice yourself rehearsing how good something will feel when you get it — or how bad it\'ll feel if you don\'t — you\'ve got two different questions available. Gilbert\'s question is: am I overestimating this? And that\'s a useful question. But the Gītā\'s question goes one step further: why am I gripping the forecast at all? The first question corrects the lens. The second asks whether the act of forecasting your happiness is itself the thing pulling you off balance. They\'re not the same question. And you don\'t have to choose between them — but it matters that you know which one you\'re asking.' },
-      // T23 — Voice A closing (v3, rendered 2026-05-09 — 8m37s total)
-      { t: 497, role: 'a', text: 'Thank you for sitting with this one today. Next time, we take up the self that isn\'t a thing — what the early Buddhist suttas call the not-self teaching, and what Thomas Metzinger calls the ego tunnel. Until then.' }
+      // T0 — Voice A (t=0s)
+      { t: 0, role: 'a', text: 'This is Dharma — two voices, one careful question per episode. Today we\'re holding a concept from the Bhagavad Gītā called vairāgya — non-attachment — next to a finding from modern psychology: that humans are remarkably bad at predicting how future events will actually make them feel.' },
+      // T1 — Voice B (t=20s)
+      { t: 20, role: 'b', text: 'So here\'s what I keep getting stuck on. Krishna tells Arjuna to act without clinging to the outcome. And then twenty-five centuries later, Daniel Gilbert\'s lab at Harvard shows that people systematically overestimate how good the good stuff will feel and how bad the bad stuff will hurt. Are they noticing the same glitch in us… or are they talking past each other?' },
+      // T2 — Voice A (t=45s) — cited: Bhagavad Gita 2.47
+      { t: 45, role: 'a', text: 'That\'s the right question, and the answer is both. Let\'s let Krishna speak first. In the Gītā, chapter two, Edwin Arnold\'s translation — Krishna says to Arjuna: "Let right deeds be thy motive, not the fruit which comes from them. And live in action! Labour! Make thine acts thy piety, casting all self aside, contemning gain and merit; equable in good or evil: equability is Yog, is piety!"', cite: 'Bhagavad Gita 2.47–2.48 (Arnold)', citeShort: 'BG 2.47' },
+      // T3 — Voice B (t=72s)
+      { t: 72, role: 'b', text: '"Casting all self aside." That\'s a stronger claim than just… don\'t get too excited about your promotion. He\'s saying the problem isn\'t the outcome — it\'s the self that\'s wrapped around the outcome.' },
+      // T4 — Voice A (t=86s) — cited: Bhagavad Gita 2.56
+      { t: 86, role: 'a', text: 'Exactly. And the Gītā builds on this. Arjuna asks what a person who\'s actually achieved this looks like — someone with steady insight, what the text calls the one of steady wisdom. Krishna\'s answer is vivid. He says such a person is "in sorrows not dejected, and in joys not overjoyed; dwelling outside the stress of passion, fear, and anger; fixed in calms of lofty contemplation." And then this image: like the ocean, day by day receiving floods from all lands, which never overflows.', cite: 'Bhagavad Gita 2.56–2.57 (Arnold)', citeShort: 'BG 2.56' },
+      // T5 — Voice B (t=120s)
+      { t: 120, role: 'b', text: 'That ocean image is striking — everything pours in, but the water level doesn\'t change. It\'s not that the person stops experiencing things. It\'s that the experiencing doesn\'t destabilize them.' },
+      // T6 — Voice A (t=133s) — cited: Yoga Sūtras 1.15
+      { t: 133, role: 'a', text: 'Right. And Patañjali sharpens the mechanism. In the Yoga Sūtras, sūtra 1.15, Vivekananda translates it this way: "That effect which comes to those who have given up their thirst after objects, either seen or heard, and which wills to control the objects, is non-attachment." So the target isn\'t the object — it\'s the thirst. The pull toward the anticipated pleasure of having or avoiding something.', cite: 'Yoga Sūtras 1.15 (Vivekananda)', citeShort: 'YS 1.15' },
+      // T7 — Voice B (t=161s)
+      { t: 161, role: 'b', text: 'And that\'s where Gilbert enters, isn\'t it? Because his research is precisely about what that thirst is aimed at — the mental image of how the future will feel.' },
+      // T8 — Voice A (t=172s)
+      { t: 172, role: 'a', text: 'It is. Gilbert and his colleague Timothy Wilson have spent decades studying what they call affective forecasting — how people predict their future emotional states. And the core finding is consistent: we\'re wrong. Not randomly wrong. Systematically wrong in one direction. We overestimate the intensity and the duration of how events will affect us. They call it the impact bias.' },
+      // T9 — Voice B (t=198s)
+      { t: 198, role: 'b', text: 'So I imagine the promotion will make me happy for months, but actually I adapt in weeks. And I imagine the rejection will crush me, but my mind… reframes it faster than I expected.' },
+      // T10 — Voice A (t=210s)
+      { t: 210, role: 'a', text: 'That\'s it. Gilbert describes what he calls a psychological immune system — the mind\'s capacity to rationalize, reframe, find meaning. People are surprisingly resilient, but they don\'t predict their own resilience. They call that immune neglect. And there\'s a second mechanism — focalism. When you imagine a future event, you zoom in on that event alone and forget everything else that will still be true about your life when it arrives. The promotion looms large in imagination because you\'re not picturing the unchanged commute, the same Tuesday meetings.' },
+      // T11 — Voice B (t=249s)
+      { t: 249, role: 'b', text: 'Okay, so both traditions are pointing at the same structural problem — we build an emotional picture of the fruit of action, and that picture is distorted. But they\'re diagnosing it differently, aren\'t they?' },
+      // T12 — Voice A (t=263s)
+      { t: 263, role: 'a', text: 'Very differently. And this is where it matters. Gilbert and Wilson diagnose a cognitive bias. The recommendation is calibrational — know that you overestimate, adjust your predictions, make better decisions. It\'s an epistemic correction. You\'re still the same self aiming at outcomes; you just get more accurate about how those outcomes will land.' },
+      // T13 — Voice B (t=287s)
+      { t: 287, role: 'b', text: 'And the Gītā\'s diagnosis goes… deeper than that.' },
+      // T14 — Voice A (t=291s) — niṣkāma karma introduced (first and only use)
+      { t: 291, role: 'a', text: 'It goes to a different place entirely. The Gītā doesn\'t say the prediction is off — it says the whole orientation of grasping at the fruit is what generates suffering. The concept Krishna teaches is niṣkāma karma — action without grasping at outcome. Not better forecasting but a fundamentally different relationship between the one who acts and the act itself. Gilbert says: your mental model of the future is unreliable, so trust it less. Krishna says: the self that builds that model, the self that wraps itself around the imagined fruit — that self-structure is the problem. Release the grip, not just the prediction.' },
+      // T15 — Voice B (t=334s)
+      { t: 334, role: 'b', text: 'So the convergence is real — both see that anticipated payoff doesn\'t deliver what it promises. But the Gītā thinks the fix is in who you are when you act, and Gilbert thinks the fix is in how accurately you predict. One is about recalibrating the instrument. The other is about… recognizing that the instrument and the one holding it aren\'t two separate things.' },
+      // T16 — Voice A (t=359s) — cited: Aṅguttara Nikāya 6.55
+      { t: 359, role: 'a', text: 'That\'s well put. And there\'s a Buddhist angle that sharpens the contrast even further. In the Anguttara Nikāya, sutta 6.55, the Buddha visits a monk named Soṇa who is striving so hard he\'s about to quit. The Buddha asks him about his old life as a harp player. When the strings were too tight — resonant? No. Too slack? No. Only when the tension was even. And then the sutta describes what a person who\'s completed that path looks like: "Their mind is quite untainted. It is steady, imperturbable, observing disappearance." The image at the end is a mountain of solid rock — storms blow from every direction and it doesn\'t shake.', cite: 'Aṅguttara Nikāya 6.55 (Sujato)', citeShort: 'AN 6.55' },
+      // T17 — Voice B (t=403s)
+      { t: 403, role: 'b', text: 'That\'s almost identical to the Gītā\'s ocean image — everything arrives, nothing destabilizes. But neither tradition is saying don\'t feel anything. They\'re describing someone who feels fully but isn\'t… owned by what they feel.' },
+      // T18 — Voice A (t=418s)
+      { t: 418, role: 'a', text: 'And that\'s exactly what Gilbert\'s model can\'t reach. His framework stays inside the self-as-predictor — it improves the predictions. The contemplative traditions are asking whether you can stand somewhere that doesn\'t need the prediction at all. Not indifference. The Gītā is emphatic — you still act, you act fully, you act with care. But the imagined payoff isn\'t what\'s driving the action anymore.' },
+      // T19 — Voice B (t=446s)
+      { t: 446, role: 'b', text: 'So the next time I notice myself rehearsing how something will feel when I get it… what\'s the question to hold?' },
+      // T20 — Voice A (t=454s)
+      { t: 454, role: 'a', text: 'The question isn\'t whether your forecast is accurate. Gilbert already showed you it\'s not. The question is: who is the one building the forecast, and does that one need the fruit in order to act? The Gītā and the lab agree that the anticipated payoff is unreliable. They part ways on what to do about it — recalibrate the model, or release the grip that made you build it. That gap between them is where the real work starts.' },
+      // T21 — Voice A closing (v4, 2026-05-09 — 498s / 8m18s)
+      { t: 483, role: 'a', text: 'Thank you for sitting with this one today. Next time, we take up the self that isn\'t a thing — what the early Buddhist suttas call the not-self teaching, and what Thomas Metzinger calls the ego tunnel. Until then.' }
     ],
     citations: [
       {
@@ -86,27 +85,36 @@ window.EPISODES = {
         source: 'Bhagavad Gita 2.47',
         license: 'PD · Edwin Arnold',
         locator: '2.47–2.48',
-        quote: 'But thou, want not! ask not! Find full reward of doing right in right! Let right deeds be thy motive, not the fruit which comes from them. And live in action! Labour! Make thine acts thy piety, casting all self aside, contemning gain and merit; equable in good or evil: equability is Yog, is piety!',
+        quote: 'Let right deeds be thy motive, not the fruit which comes from them. And live in action! Labour! Make thine acts thy piety, casting all self aside, contemning gain and merit; equable in good or evil: equability is Yog, is piety!',
         url: 'https://www.sacred-texts.com/hin/gita/bg02.htm',
-        heardAt: 66
+        heardAt: 45
       },
       {
         id: 'cite02',
         source: 'Bhagavad Gita 2.56',
         license: 'PD · Edwin Arnold',
-        locator: '2.56',
-        quote: 'In sorrows not dejected, and in joys not overjoyed; dwelling outside the stress of passion, fear, and anger; fixed in calms of lofty contemplation — such an one is Muni, is the Sage, the true Recluse!',
+        locator: '2.56–2.57',
+        quote: 'In sorrows not dejected, and in joys not overjoyed; dwelling outside the stress of passion, fear, and anger; fixed in calms of lofty contemplation.',
         url: 'https://www.sacred-texts.com/hin/gita/bg02.htm',
-        heardAt: 123
+        heardAt: 86
       },
       {
         id: 'cite03',
-        source: 'Anguttara Nikāya 5.30 — With Nāgita',
+        source: 'Yoga Sūtras 1.15',
+        license: 'PD · Swami Vivekananda',
+        locator: '1.15',
+        quote: 'That effect which comes to those who have given up their thirst after objects, either seen or heard, and which wills to control the objects, is non-attachment.',
+        url: 'https://www.sacred-texts.com/hin/yogasutr.htm',
+        heardAt: 133
+      },
+      {
+        id: 'cite04',
+        source: 'Aṅguttara Nikāya 6.55 — With Soṇa',
         license: 'CC0 · Bhante Sujato',
-        locator: 'AN 5.30',
-        quote: 'May I never become famous. May fame not come to me. There are those who can\'t get the pleasure of renunciation, the pleasure of seclusion, the pleasure of peace, the pleasure of awakening when they want, without trouble or difficulty like I can. Let them enjoy the filthy, lazy pleasure of possessions, honor, and popularity.',
-        url: 'https://suttacentral.net/an5.30/en/sujato',
-        heardAt: 302
+        locator: 'AN 6.55',
+        quote: 'Their mind is quite untainted. It is steady, imperturbable, observing disappearance.',
+        url: 'https://suttacentral.net/an6.55/en/sujato',
+        heardAt: 359
       }
     ],
     showNotes: {
@@ -114,7 +122,8 @@ window.EPISODES = {
       primarySources: [
         { label: 'Bhagavad Gita 2.47', detail: 'Edwin Arnold · License: PD', url: 'https://www.sacred-texts.com/hin/gita/bg02.htm' },
         { label: 'Bhagavad Gita 2.56', detail: 'Edwin Arnold · License: PD', url: 'https://www.sacred-texts.com/hin/gita/bg02.htm' },
-        { label: 'Anguttara Nikāya 5.30 — With Nāgita', detail: 'Bhante Sujato · License: CC0', url: 'https://suttacentral.net/an5.30/en/sujato' }
+        { label: 'Yoga Sūtras 1.15', detail: 'Swami Vivekananda · License: PD', url: 'https://www.sacred-texts.com/hin/yogasutr.htm' },
+        { label: 'Aṅguttara Nikāya 6.55 — With Soṇa', detail: 'Bhante Sujato · License: CC0', url: 'https://suttacentral.net/an6.55/en/sujato' }
       ],
       modernThinkerContext: 'Daniel Gilbert & Timothy Wilson on Affective Forecasting. Public lectures and peer-reviewed papers. Core finding: humans systematically overestimate the emotional impact of future events (impact bias) and underestimate their own psychological immune system\'s capacity to adapt (immune neglect). Vairāgya and niṣkāma karma address this asymmetry from the inside — not by correcting the forecast, but by releasing the grip on outcome.',
       antiPatterns: [

@@ -87,20 +87,19 @@ _SORTED_TERMS: list[tuple[str, str]] = sorted(
 
 def apply_phoneme_substitution(text: str) -> str:
     """
-    Wrap each occurrence of a known Sanskrit/Pāli/Indian term in an
-    ElevenLabs-compatible phoneme tag:
+    v4 NO-OP: IPA phoneme substitution reverted.
 
-        <phoneme alphabet="ipa" ph="...">term</phoneme>
+    v3 wrapped Sanskrit/Pāli terms in <phoneme alphabet="ipa" ph="...">
+    tags before sending to ElevenLabs multilingual_v2. Two problems observed
+    in the v3 listen:
+      1. multilingual_v2 silently drops <phoneme> tags — no pronunciation
+         improvement, only overhead.
+      2. The combination of IPA tags + style=0.35 voice setting shifted Voice A
+         toward forced Indian intonation, which was worse than plain text in v2.
 
-    Terms are processed longest-first to avoid partial-match overlap
-    (e.g. compound "Bhagavad Gītā" is replaced before shorter components).
-
-    Already-tagged spans are preserved: the text is split into tagged
-    and untagged segments; substitution only runs on untagged segments.
+    Plain text (no tags) to multilingual_v2 performs better. Returns text
+    unchanged. PRONUNCIATION_TABLE is retained for reference.
     """
-    for term, ipa in _SORTED_TERMS:
-        replacement = f'<phoneme alphabet="ipa" ph="{ipa}">{term}</phoneme>'
-        text = _sub_outside_tags(text, term, replacement)
     return text
 
 

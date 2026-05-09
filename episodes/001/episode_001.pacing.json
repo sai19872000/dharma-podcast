@@ -1,35 +1,35 @@
 {
   "episode": "ep001-vairagya",
-  "total_duration_s": 517.3,
+  "total_duration_s": 498.1,
   "sections": [
     {
       "section": "HOOK",
       "start_s": 0.0,
-      "end_s": 94.0,
+      "end_s": 90.6,
       "turn_start": 0
     },
     {
       "section": "EAST",
-      "start_s": 94.0,
-      "end_s": 235.1,
+      "start_s": 90.6,
+      "end_s": 226.4,
       "turn_start": 4
     },
     {
       "section": "WEST",
-      "start_s": 235.1,
-      "end_s": 376.2,
+      "start_s": 226.4,
+      "end_s": 362.2,
       "turn_start": 10
     },
     {
       "section": "CONVERGENCE",
-      "start_s": 376.2,
-      "end_s": 470.2,
+      "start_s": 362.2,
+      "end_s": 452.8,
       "turn_start": 16
     },
     {
       "section": "TAKEAWAY",
-      "start_s": 470.2,
-      "end_s": 517.3,
+      "start_s": 452.8,
+      "end_s": 498.1,
       "turn_start": 20
     }
   ]

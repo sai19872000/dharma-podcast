@@ -8,6 +8,12 @@ v3 change: fixed-width 250ms inter-turn silence replaced with jittered silence
 sampled uniformly from {250, 350, 450, 550, 650} ms per gap.  Realism lever:
 natural conversation doesn't have perfectly metronomic gaps.
 
+v4 change: post-Student (Voice B) gaps are fixed at 350ms.  v3 jitter pool was
+applied to ALL gaps, making post-Student pauses sometimes 450–650ms — too long
+per Sai's v3 listen.  Post-Teacher (Voice A) gaps keep the jitter pool for
+natural teacher pacing.  Voice label is inferred from the turn filename suffix
+(e.g. "turn_001_B.mp3" → Voice B), so the stitch_episode() API is unchanged.
+
 Public API:
     stitch_episode(turn_paths, output_path) -> Path
 """
@@ -19,8 +25,14 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-# Pool of silence durations (ms). One value is chosen at random per gap.
+# Pool of silence durations (ms). Used for post-Teacher (Voice A) gaps.
 _SILENCE_POOL_MS: list[int] = [250, 350, 450, 550, 650]
+
+# Fixed silence duration for post-Student (Voice B) gaps.
+# v3 used the full jitter pool for all gaps; Sai's v3 listen found post-Student
+# pauses (up to 650ms) too long. Restored to v2-equivalent ~300-400ms; 350ms
+# is the midpoint and already in the pool so no new silence asset is needed.
+_POST_STUDENT_GAP_MS: int = 350
 
 
 def stitch_episode(
@@ -48,12 +60,22 @@ def stitch_episode(
         ms: _generate_silence(ms, silence_dir) for ms in _SILENCE_POOL_MS
     }
 
-    # Interleave: for each gap between turns, pick a random silence duration
+    # Interleave: for each gap between turns, pick silence duration based on
+    # the voice of the preceding turn.
+    #   - Post-Voice B (Student): fixed _POST_STUDENT_GAP_MS (350ms) — v3 jitter
+    #     was too long here per Sai's listen; restored to v2 ~300-400ms timing.
+    #   - Post-Voice A (Teacher): jitter pool {250..650} — unchanged from v3.
+    # Voice label is read from the filename suffix: "turn_001_B.mp3" → 'B'.
     ordered: list[Path] = []
     for i, p in enumerate(turn_paths):
         ordered.append(p)
         if i < len(turn_paths) - 1:
-            gap_ms = random.choice(_SILENCE_POOL_MS)
+            # Extract voice label from filename (e.g. turn_001_B.mp3 → 'B')
+            voice_label = p.stem.rsplit('_', 1)[-1]
+            if voice_label == 'B':
+                gap_ms = _POST_STUDENT_GAP_MS
+            else:
+                gap_ms = random.choice(_SILENCE_POOL_MS)
             ordered.append(silence_paths[gap_ms])
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
@@ -76,7 +98,7 @@ def stitch_episode(
     finally:
         Path(concat_list).unlink(missing_ok=True)
 
-    print(f"[stitch] written: {output_path} ({len(turn_paths)} turns, jittered gaps)")
+    print(f"[stitch] written: {output_path} ({len(turn_paths)} turns, post-A jittered / post-B fixed {_POST_STUDENT_GAP_MS}ms)")
     return output_path
 
 
