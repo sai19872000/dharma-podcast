@@ -226,6 +226,8 @@ body {
   display: flex; align-items: center; gap: 2px;
   cursor: pointer;
   padding: 0 2px;
+  touch-action: none;   /* prevent page scroll during drag-scrub */
+  user-select: none;    /* no text selection while scrubbing */
 }
 .wf-bar {
   flex: 1;
@@ -262,6 +264,8 @@ body {
   position: relative; height: 24px;
   cursor: pointer;
   display: flex; align-items: center;
+  touch-action: none;   /* prevent page scroll during drag-scrub */
+  user-select: none;
 }
 .player-minimal-track {
   position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);

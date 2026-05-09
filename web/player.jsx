@@ -30,11 +30,32 @@ const makeWaveform = (duration, samples = 180, chapters = []) => {
 const Waveform = ({ duration, current, chapters, onSeek, style = 'wave' }) => {
   const ref = useRef(null);
   const bars = useMemo(() => makeWaveform(duration, 200, chapters), [duration, chapters]);
+  const seekingRef = useRef(false);
 
-  const handleClick = (e) => {
+  const getSeekTime = (e) => {
     const rect = ref.current.getBoundingClientRect();
     const pct = (e.clientX - rect.left) / rect.width;
-    onSeek(Math.max(0, Math.min(duration, pct * duration)));
+    return Math.max(0, Math.min(duration, pct * duration));
+  };
+
+  const handlePointerDown = (e) => {
+    // ignore right-click / middle-click
+    if (e.button !== undefined && e.button !== 0) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    seekingRef.current = true;
+    onSeek(getSeekTime(e));
+  };
+
+  const handlePointerMove = (e) => {
+    if (!seekingRef.current) return;
+    onSeek(getSeekTime(e));
+  };
+
+  const handlePointerUp = (e) => {
+    if (!seekingRef.current) return;
+    seekingRef.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    onSeek(getSeekTime(e));
   };
 
   const progress = current / duration;
@@ -42,7 +63,14 @@ const Waveform = ({ duration, current, chapters, onSeek, style = 'wave' }) => {
   if (style === 'minimal') {
     return (
       <div className="player-minimal-wrap">
-        <div ref={ref} className="player-minimal" onClick={handleClick}>
+        <div
+          ref={ref}
+          className="player-minimal"
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+        >
           <div className="player-minimal-track" />
           <div className="player-minimal-fill" style={{ width: `${progress * 100}%` }} />
           {chapters.map((c, i) => (
@@ -50,6 +78,7 @@ const Waveform = ({ duration, current, chapters, onSeek, style = 'wave' }) => {
               key={i}
               className="player-chapter-tick"
               style={{ left: `${(c.t / duration) * 100}%` }}
+              onPointerDown={(e) => e.stopPropagation()}
               onClick={(e) => { e.stopPropagation(); onSeek(c.t); }}
               title={c.label}
             />
@@ -62,7 +91,14 @@ const Waveform = ({ duration, current, chapters, onSeek, style = 'wave' }) => {
 
   return (
     <div className="waveform-wrap">
-      <div ref={ref} className="waveform" onClick={handleClick}>
+      <div
+        ref={ref}
+        className="waveform"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
         {bars.map((amp, i) => {
           const passed = (i / bars.length) <= progress;
           return (
@@ -78,6 +114,7 @@ const Waveform = ({ duration, current, chapters, onSeek, style = 'wave' }) => {
             key={`ch-${i}`}
             className="wf-chapter"
             style={{ left: `${(c.t / duration) * 100}%` }}
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => { e.stopPropagation(); onSeek(c.t); }}
             title={c.label}
           />
@@ -97,22 +134,43 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
   const tickRef = useRef(null);
   const transcriptRef = useRef(null);
   const audioRef = useRef(null);           // real <audio> element
-  const [simulated, setSimulated] = useState(false); // true = audio unavailable, use fake timer
+  const metaReadyRef = useRef(false);      // true once loadedmetadata fires
+  const pendingSeekRef = useRef(null);     // seek queued before metadata loaded
+  const [simulated, setSimulated] = useState(false); // true = audio file genuinely unavailable
 
   const duration = episode.duration;
 
   // Real audio — sync current from audio.currentTime via timeupdate.
-  // Falls back to simulated mode on error (dev preview, missing file, etc.).
+  // Falls back to simulated mode ONLY on MEDIA_ERR_SRC_NOT_FOUND (file missing).
+  // NotAllowedError / AbortError from play() are browser-policy, not audio errors.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
+
+    const onMeta = () => {
+      metaReadyRef.current = true;
+      if (pendingSeekRef.current !== null) {
+        audio.currentTime = pendingSeekRef.current;
+        pendingSeekRef.current = null;
+      }
+    };
     const onTimeUpdate = () => { if (!simulated) setCurrent(audio.currentTime); };
     const onEnded = () => setPlaying(false);
-    const onError = () => setSimulated(true);
+    const onError = () => {
+      // Only fall back to simulated mode when the file is genuinely missing.
+      // Transient network hiccups or codec errors should not permanently disable seeks.
+      const err = audio.error;
+      if (err && err.code === MediaError.MEDIA_ERR_SRC_NOT_FOUND) {
+        setSimulated(true);
+      }
+    };
+
+    audio.addEventListener('loadedmetadata', onMeta);
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('ended', onEnded);
     audio.addEventListener('error', onError);
     return () => {
+      audio.removeEventListener('loadedmetadata', onMeta);
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
@@ -156,16 +214,35 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
     const audio = audioRef.current;
     const next = !playing;
     if (audio && !simulated && episode.audioSrc) {
-      if (next) audio.play().catch(() => setSimulated(true));
-      else audio.pause();
+      if (next) {
+        audio.play().catch((err) => {
+          // AbortError: play() interrupted by pause — ignore.
+          // NotAllowedError: autoplay policy — user will tap again, don't simulate.
+          // Anything else is a real problem → enter simulated mode.
+          if (err.name !== 'AbortError' && err.name !== 'NotAllowedError') {
+            setSimulated(true);
+          }
+        });
+      } else {
+        audio.pause();
+      }
     }
     setPlaying(next);
   };
+
   const seek = (t) => {
     const audio = audioRef.current;
-    if (audio && !simulated && episode.audioSrc) audio.currentTime = t;
+    if (audio && !simulated && episode.audioSrc) {
+      if (metaReadyRef.current) {
+        audio.currentTime = t;
+      } else {
+        // Queue the seek; onMeta will apply it once metadata loads.
+        pendingSeekRef.current = t;
+      }
+    }
     setCurrent(t);
   };
+
   const cycleSpeed = () => {
     const speeds = [0.85, 1, 1.25, 1.5];
     const idx = speeds.indexOf(speed);
@@ -361,7 +438,8 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
       </div>
       {/* Real audio element — hidden; drives playback once R2 audio is live.
           Simulated waveform + transcript-sync remain intact; audio.currentTime
-          drives the same `current` state. Falls back to fake timer on error. */}
+          drives the same `current` state. Falls back to fake timer only on
+          MEDIA_ERR_SRC_NOT_FOUND (file genuinely missing — dev without audio asset). */}
       {episode.audioSrc && (
         <audio ref={audioRef} src={episode.audioSrc} preload="metadata" style={{ display: 'none' }} />
       )}
