@@ -1,0 +1,11 @@
+name = "dharma-podcast-rss"
+compatibility_date = "2026-04-01"
+main = "./src/worker.js"
+
+[assets]
+directory = "../web"
+not_found_handling = "404-page"
+
+[[routes]]
+pattern = "dharma.saiteja.ai/*"
+zone_name = "saiteja.ai"
