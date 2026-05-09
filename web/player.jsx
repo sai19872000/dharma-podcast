@@ -231,6 +231,7 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
   };
 
   const seek = (t) => {
+    if (!Number.isFinite(t)) return;
     const audio = audioRef.current;
     if (audio && !simulated && episode.audioSrc) {
       if (metaReadyRef.current) {
@@ -323,12 +324,12 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
           <span className="np-chapter">{activeChapter.label}</span>
         </div>
         <div className="player-actions">
-          <button className="ctrl-btn" onClick={() => seek(Math.max(0, current - 15))} title="Back 15s">
+          <button className="ctrl-btn" onClick={() => { const c = Number.isFinite(current) ? current : 0; seek(Math.max(0, c - 15)); }} title="Back 15s">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
             <span>15</span>
           </button>
           <button className="ctrl-btn speed" onClick={cycleSpeed} title="Playback speed">{speed}×</button>
-          <button className="ctrl-btn" onClick={() => seek(Math.min(duration, current + 30))} title="Forward 30s">
+          <button className="ctrl-btn" onClick={() => { const c = Number.isFinite(current) ? current : 0; seek(Math.min(duration, c + 30)); }} title="Forward 30s">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7" /><path d="M21 4v5h-5" /></svg>
             <span>30</span>
           </button>
@@ -441,7 +442,7 @@ const Player = ({ episode, playerStyle, onCiteHover }) => {
           drives the same `current` state. Falls back to fake timer only on
           MEDIA_ERR_SRC_NOT_FOUND (file genuinely missing — dev without audio asset). */}
       {episode.audioSrc && (
-        <audio ref={audioRef} src={episode.audioSrc} preload="metadata" style={{ display: 'none' }} />
+        <audio ref={audioRef} src={episode.audioSrc} preload="auto" style={{ display: 'none' }} />
       )}
     </div>
   );
