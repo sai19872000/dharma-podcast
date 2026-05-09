@@ -1,0 +1,486 @@
+/* Aura token-driven stylesheet for dharma.saiteja.ai
+   Source of truth: registry.saiteja.ai / sairam-tokens
+   sai ram labs — quietly forged */
+
+/* ─── tokens ─────────────────────────────────────────────────────────────── */
+:root {
+  --bg:             #0A0E1A;
+  --bg-surface:     #0E1424;
+  --accent:         #8AB6FF;
+  --accent-dim:     rgba(138, 182, 255, 0.15);
+  --accent-glow:    rgba(138, 182, 255, 0.08);
+  --text:           #E8E4DC;
+  --text-muted:     rgba(232, 228, 220, 0.55);
+  --text-faint:     rgba(232, 228, 220, 0.30);
+  --border:         rgba(138, 182, 255, 0.10);
+  --border-hover:   rgba(138, 182, 255, 0.22);
+
+  /* spacing */
+  --sp-4:  4px;
+  --sp-8:  8px;
+  --sp-12: 12px;
+  --sp-16: 16px;
+  --sp-24: 24px;
+  --sp-32: 32px;
+  --sp-48: 48px;
+  --sp-64: 64px;
+  --sp-96: 96px;
+
+  /* type */
+  --font-main: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* motion */
+  --ease-standard:  cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast:  120ms;
+  --duration-base:  220ms;
+  --duration-slow:  480ms;
+}
+
+/* ─── selection hook (sairam-tokens inheritance) ───────────────────────────── */
+::selection {
+  background: rgba(138, 182, 255, 0.22);
+  color: #E8E4DC;
+}
+
+/* ─── reset + base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+a:hover { opacity: 0.75; }
+
+/* ─── AuraMark (breathing ring) ────────────────────────────────────────────── */
+@keyframes aura-breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.55; }
+  50%       { transform: scale(1.10); opacity: 1;    }
+}
+@keyframes aura-core-pulse {
+  0%, 100% { opacity: 0.12; }
+  50%       { opacity: 0.28; }
+}
+
+.aura-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.aura-mark svg {
+  animation: aura-breathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+.aura-mark .aura-ring {
+  /* ring stroke animated via parent */
+}
+.aura-mark .aura-core {
+  animation: aura-core-pulse 4s ease-in-out infinite;
+}
+
+/* ─── site header ──────────────────────────────────────────────────────────── */
+.site-header {
+  padding: var(--sp-48) var(--sp-24) var(--sp-64);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.site-header .mark-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-16);
+  margin-bottom: var(--sp-32);
+}
+
+.show-name {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.show-tagline {
+  font-size: 0.9rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-top: var(--sp-8);
+}
+
+.show-mission {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-top: var(--sp-16);
+  max-width: 560px;
+}
+
+/* ─── episode grid ─────────────────────────────────────────────────────────── */
+.episodes-section {
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 var(--sp-24) var(--sp-96);
+  flex: 1;
+}
+
+.episodes-heading {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-24);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-12);
+}
+
+.episode-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.episode-card {
+  display: block;
+  padding: var(--sp-24);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  text-decoration: none;
+  transition:
+    border-color var(--duration-base) var(--ease-standard),
+    background var(--duration-base) var(--ease-standard);
+}
+.episode-card:hover {
+  border-color: var(--border-hover);
+  background: var(--accent-glow);
+  opacity: 1;
+}
+
+.episode-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-16);
+  margin-bottom: var(--sp-12);
+}
+
+.episode-number {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.episode-meta {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  display: flex;
+  gap: var(--sp-12);
+}
+
+.episode-title {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  margin-bottom: var(--sp-8);
+}
+
+.episode-concept {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.episode-concept .sanskrit {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 200;
+}
+
+.episode-concept .sep {
+  margin: 0 var(--sp-8);
+  color: var(--text-faint);
+}
+
+/* empty state */
+.episodes-empty {
+  text-align: center;
+  padding: var(--sp-64) 0;
+  color: var(--text-faint);
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+/* ─── per-episode page ─────────────────────────────────────────────────────── */
+.episode-page {
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  padding: var(--sp-48) var(--sp-24) var(--sp-96);
+  flex: 1;
+}
+
+.episode-page-nav {
+  margin-bottom: var(--sp-48);
+}
+.episode-page-nav a {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+.episode-page-nav a:hover { color: var(--accent); opacity: 1; }
+
+.episode-page-header {
+  margin-bottom: var(--sp-48);
+}
+
+.episode-page-number {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  margin-bottom: var(--sp-16);
+}
+
+.episode-page-title {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: var(--sp-16);
+}
+
+.episode-page-concept {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-12);
+  flex-wrap: wrap;
+}
+
+.concept-sanskrit {
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 200;
+  color: var(--accent);
+}
+
+.concept-sep {
+  color: var(--border-hover);
+}
+
+.concept-english {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--text-muted);
+}
+
+.concept-modern {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  padding: var(--sp-4) var(--sp-8);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+.episode-page-dateline {
+  margin-top: var(--sp-24);
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  display: flex;
+  gap: var(--sp-16);
+}
+
+/* audio player */
+.audio-player {
+  margin: var(--sp-32) 0;
+  padding: var(--sp-24);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.audio-player audio {
+  width: 100%;
+  outline: none;
+}
+
+/* custom audio style — browsers vary; this is best-effort */
+.audio-player audio::-webkit-media-controls-panel {
+  background: var(--bg-surface);
+}
+
+/* show notes */
+.show-notes {
+  margin: var(--sp-48) 0;
+}
+.show-notes-heading {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-24);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-12);
+}
+.show-notes-body {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+.show-notes-body p + p { margin-top: var(--sp-16); }
+.show-notes-body strong { color: var(--text); font-weight: 400; }
+.show-notes-body em { font-style: italic; font-weight: 200; color: var(--accent); }
+.show-notes-body blockquote {
+  border-left: 1px solid var(--accent-dim);
+  padding-left: var(--sp-16);
+  color: var(--text-muted);
+  margin: var(--sp-16) 0;
+}
+.show-notes-body a { color: var(--accent); }
+.show-notes-body code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--accent-dim);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* citations */
+.citations {
+  margin: var(--sp-48) 0;
+}
+.citations-heading {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: var(--sp-24);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-12);
+}
+.citation-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+}
+.citation-item {
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-left: var(--sp-16);
+  border-left: 1px solid var(--border);
+}
+.citation-item .citation-ref {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  margin-top: var(--sp-4);
+  letter-spacing: 0.05em;
+}
+.citation-item a { color: var(--text-faint); text-decoration: underline; text-underline-offset: 2px; }
+.citation-item a:hover { color: var(--accent); opacity: 1; }
+.citation-license {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-faint);
+  margin-left: var(--sp-8);
+  text-transform: uppercase;
+}
+
+/* ─── AuraCredit footer ─────────────────────────────────────────────────────── */
+.aura-credit {
+  border-top: 1px solid var(--border);
+  padding: var(--sp-32) var(--sp-24);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-12);
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.aura-credit-left {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-12);
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.aura-credit-mark {
+  width: 18px;
+  height: 18px;
+  opacity: 0.5;
+}
+
+.aura-credit-left .org {
+  color: var(--text-faint);
+}
+
+.aura-credit-right {
+  font-size: 0.75rem;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+.aura-credit-right a {
+  color: var(--text-faint);
+}
+.aura-credit-right a:hover { color: var(--accent); opacity: 1; }
+
+/* ─── responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .site-header { padding: var(--sp-32) var(--sp-16) var(--sp-48); }
+  .episodes-section { padding: 0 var(--sp-16) var(--sp-64); }
+  .episode-page { padding: var(--sp-32) var(--sp-16) var(--sp-64); }
+  .aura-credit { flex-direction: column; align-items: flex-start; }
+  .episode-card-header { flex-direction: column; align-items: flex-start; gap: var(--sp-4); }
+}

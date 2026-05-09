@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EP {EPISODE_NO}: {EPISODE_TITLE} — Dharma</title>
+  <meta name="description" content="{EPISODE_DESCRIPTION}">
+  <meta property="og:title" content="EP {EPISODE_NO}: {EPISODE_TITLE}">
+  <meta property="og:description" content="{EPISODE_DESCRIPTION}">
+  <meta property="og:type" content="music.song">
+  <meta property="og:url" content="https://dharma.saiteja.ai/episodes/{EPISODE_NO}">
+  <meta property="og:audio" content="https://dharma.saiteja.ai/audio/{EPISODE_NO}.mp3">
+  <meta property="og:audio:type" content="audio/mpeg">
+  <link rel="alternate" type="application/rss+xml" title="Dharma Podcast" href="/feed.xml">
+  <link rel="canonical" href="https://dharma.saiteja.ai/episodes/{EPISODE_NO}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* page-level layout (episode only) */
+    .page-wrap {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .footer-wrap {
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ─── episode page ─────────────────────────────────────────────── -->
+  <main class="episode-page" role="main">
+
+    <!-- back nav -->
+    <nav class="episode-page-nav" aria-label="Site navigation">
+      <a href="/" aria-label="Back to all episodes">← Dharma</a>
+    </nav>
+
+    <!-- header -->
+    <header class="episode-page-header">
+      <p class="episode-page-number">EP {EPISODE_NO}</p>
+
+      <h1 class="episode-page-title">{EPISODE_TITLE}</h1>
+
+      <div class="episode-page-concept">
+        <span class="concept-sanskrit">{CONCEPT_SANSKRIT}</span>
+        <span class="concept-sep" aria-hidden="true">·</span>
+        <span class="concept-english">{CONCEPT_ENGLISH}</span>
+        <!-- paired modern concept (shown when available) -->
+        {CONCEPT_MODERN_TAG}
+        <!--
+          Replace {CONCEPT_MODERN_TAG} with either empty string or:
+          <span class="concept-modern" title="paired modern concept">{CONCEPT_MODERN}</span>
+        -->
+      </div>
+
+      <div class="episode-page-dateline">
+        <time datetime="{PUBLISH_DATE_ISO}">{PUBLISH_DATE_DISPLAY}</time>
+        <span aria-hidden="true">·</span>
+        <span>{DURATION}</span>
+      </div>
+    </header>
+
+    <!-- AuraMark header mark (smaller, page context) -->
+    <div class="aura-mark" aria-hidden="true" style="margin-bottom: 32px;">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <circle class="aura-ring" cx="16" cy="16" r="13"
+                stroke="#8AB6FF" stroke-width="0.75" fill="none"/>
+        <circle class="aura-ring" cx="16" cy="16" r="9"
+                stroke="#8AB6FF" stroke-width="0.4" fill="none" opacity="0.5"/>
+        <circle class="aura-core" cx="16" cy="16" r="3.5"
+                fill="#8AB6FF" opacity="0.18"/>
+      </svg>
+    </div>
+
+    <!-- ─── audio player ──────────────────────────────────────────── -->
+    <section class="audio-player" aria-label="Episode audio">
+      <audio controls preload="metadata"
+             aria-label="EP {EPISODE_NO}: {EPISODE_TITLE}">
+        <source src="https://dharma.saiteja.ai/audio/{EPISODE_NO}.mp3"
+                type="audio/mpeg">
+        <p>Your browser does not support the audio element.
+           <a href="https://dharma.saiteja.ai/audio/{EPISODE_NO}.mp3">Download MP3</a>
+        </p>
+      </audio>
+    </section>
+
+    <!-- ─── show notes ────────────────────────────────────────────── -->
+    <section class="show-notes" aria-label="Show notes">
+      <p class="show-notes-heading">Show notes</p>
+      <div class="show-notes-body" role="document">
+        {SHOW_NOTES_HTML}
+        <!--
+          Replace {SHOW_NOTES_HTML} with markdown-to-HTML rendered content
+          from episodes/NNN/show_notes.md at publish time (artifacts.py).
+          Example output:
+          <p>This episode examines <strong>vairāgya</strong> — the Gītā's
+          teaching on action without grasping at its fruit — alongside
+          Gilbert and Wilson's affective-forecasting research.</p>
+
+          <blockquote>
+            "Let right deeds be thy motive, not the fruit which comes from them."
+            — Bhagavad Gītā 2.47, Edwin Arnold (1885)
+          </blockquote>
+        -->
+      </div>
+    </section>
+
+    <!-- ─── citations ─────────────────────────────────────────────── -->
+    <section class="citations" aria-label="Citations">
+      <p class="citations-heading">Citations</p>
+      <ol class="citation-list">
+        {CITATIONS_HTML}
+        <!--
+          Replace {CITATIONS_HTML} with rendered rows from
+          episodes/NNN/citations.jsonl at publish time (artifacts.py).
+          Each row follows this shape:
+
+          <li class="citation-item">
+            <span>{WORK} — {VERSE_OR_SECTION}</span>
+            <span class="citation-ref">
+              {TRANSLATOR} ·
+              <a href="{CITATION_URL}" rel="noopener noreferrer"
+                 target="_blank">{CITATION_URL_DISPLAY}</a>
+              <span class="citation-license">{LICENSE}</span>
+            </span>
+          </li>
+
+          Example:
+          <li class="citation-item">
+            Bhagavad Gītā 2.47 — "Let right deeds be thy motive…"
+            <span class="citation-ref">
+              Edwin Arnold (1885) ·
+              <a href="https://sacred-texts.com/hin/gita/bg02.htm"
+                 rel="noopener noreferrer" target="_blank">sacred-texts.com</a>
+              <span class="citation-license">PD</span>
+            </span>
+          </li>
+        -->
+      </ol>
+    </section>
+
+  </main>
+
+  <!-- ─── footer ──────────────────────────────────────────────────── -->
+  <div class="footer-wrap">
+    <footer class="aura-credit" role="contentinfo">
+      <div class="aura-credit-left">
+        <!-- AuraCredit mark -->
+        <svg class="aura-credit-mark" viewBox="0 0 18 18" fill="none"
+             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="9" cy="9" r="7.5" stroke="#8AB6FF" stroke-width="0.6" fill="none"/>
+          <circle cx="9" cy="9" r="4"   stroke="#8AB6FF" stroke-width="0.4" fill="none" opacity="0.5"/>
+        </svg>
+        <span class="org">Sai Ram Labs</span>
+      </div>
+      <div class="aura-credit-right">
+        <a href="https://saiteja.ai" rel="noopener noreferrer">saiteja.ai</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/sai19872000/dharma-podcast/blob/main/soul.md"
+           rel="noopener noreferrer" title="The show's foundational worldview document">soul.md</a>
+        <span aria-hidden="true">·</span>
+        <a href="/feed.xml" type="application/rss+xml">RSS</a>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  /* printAuraSignature — aura-boot inheritance hook */
+  (function printAuraSignature() {
+    if (typeof console !== 'undefined' && console.log) {
+      console.log('\u25D0 quietly forged at saiteja.ai');
+    }
+  })();
+</script>
+</body>
+</html>
