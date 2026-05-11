@@ -7,6 +7,10 @@ binding = "ASSETS"
 directory = "../web"
 not_found_handling = "404-page"
 
+[[r2_buckets]]
+binding = "AUDIO"
+bucket_name = "dharma-podcast-audio"
+
 [[routes]]
 pattern = "dharma.saiteja.ai/*"
 zone_name = "saiteja.ai"
