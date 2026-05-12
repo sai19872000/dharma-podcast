@@ -4,9 +4,12 @@
  *   enabling browser seek (±15s/±30s, waveform click+drag, transcript-row click).
  * - Everything else → static site via [assets] binding.
  *
- * Root cause of v4.1 seek bug: Wrangler [assets] does not reliably honor Range
- * headers, and CF cache had served a stale HTTP 200 (no Accept-Ranges) for
- * audio files. Without 206, <audio> elements reset to 0:00 on every seek.
+ * IMPORTANT: do NOT keep audio files in ../web/audio/. Wrangler [assets] binding
+ * serves static files BEFORE this Worker handler runs (default behavior, no
+ * `run_worker_first` set). If ../web/audio/001.mp3 exists, the asset handler
+ * intercepts /audio/001.mp3 with default headers (no Accept-Ranges, no 206),
+ * silently bypassing the Range-aware code below. The R2 bucket `dharma-podcast-audio`
+ * is the single source of truth for /audio/*; web/audio/ is empty by design.
  */
 
 export default {
